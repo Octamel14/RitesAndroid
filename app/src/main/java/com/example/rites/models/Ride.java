@@ -3,15 +3,25 @@ package com.example.rites.models;
 import com.google.gson.annotations.Expose;
 
 public class Ride {
+    @Expose
     private int id_ride;
+    @Expose
     private String starting_point;
+    @Expose
     private String destination;
+    @Expose
     private String date;
+    @Expose
     private String hour;
+    @Expose
     private int room;
+    @Expose
     private int n_stops;
+    @Expose
     private float cost;
+    @Expose
     private int host;
+    @Expose
     private int vehicle;
 
     Ride(){}

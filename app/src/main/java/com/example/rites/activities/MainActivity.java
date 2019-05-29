@@ -10,9 +10,10 @@ import android.widget.Toast;
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
-import com.example.rites.adapters.Adapter_rides;
+import com.example.rites.models.PostRide;
 import com.example.rites.models.Ride;
 
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,16 +31,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recyclerViewRites);
-        //List<Ride> rides=GetAllRides();
 
+      //  SubeleService service= API.getApi().create(SubeleService.class);
+       // Call<List<Ride>> call = service.getRides2();
+        List<Ride> rides= Collections.emptyList();
+        Ride ride=new Ride(0, "DICIS", "2019-05-26", "18:48:02", 4, 1, 30.0f, 1, 1, "Valle");
         SubeleService service= API.getApi().create(SubeleService.class);
-        Call<List<Ride>> call = service.getRides2();
-        List<Ride> rides=null;
+        Call call=service.CreateRide(new PostRide(ride));
+
+        //Call call=service.CreateRide2(0, "DICIS", "Guanajuat", "2019-05-25", "18:46:03", 5, 1, 50.0f, 1, 1);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                Toast.makeText(MainActivity.this, call.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
         myLayoutManager=new LinearLayoutManager(MainActivity.this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(myLayoutManager);
         //////////////////////////////////////RETROFIT/////////////////////////////////////////////////
+        /*
         call.enqueue(new Callback<List<Ride>>() {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
@@ -61,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////
-        });
+        });*/
     }
 
 }
