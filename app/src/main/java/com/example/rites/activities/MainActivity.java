@@ -32,15 +32,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recyclerViewRites);
         //List<Rides> rides=GetAllRides();
+
         SubeleService service= API.getApi().create(SubeleService.class);
         Call<List<Rides>> call = service.getRides2();
         List<Rides> rides=null;
+        myLayoutManager=new LinearLayoutManager(MainActivity.this);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(myLayoutManager);
+        //////////////////////////////////////RETROFIT/////////////////////////////////////////////////
         call.enqueue(new Callback<List<Rides>>() {
             @Override
             public void onResponse(Call<List<Rides>> call, Response<List<Rides>> response) {
                 List<Rides> rides=response.body();
 
-                myLayoutManager=new LinearLayoutManager(MainActivity.this);
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
                     public void onItemClick(Rides name, int position) {
@@ -48,38 +53,16 @@ public class MainActivity extends AppCompatActivity {
                         //ACCION kawai para cuando se le da click en un item de la lista
                     }
                 });
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(myLayoutManager);
+
                 recyclerView.setAdapter(adapter);
             }
             @Override
             public void onFailure(Call<List<Rides>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
+
+            //////////////////////////////////////////////////////////////////////////////////////////
         });
-
-
-
-        /*if(rides!=null) {
-            //ListView
-            recyclerView=findViewById(R.id.recyclerViewRites);
-            myLayoutManager=new LinearLayoutManager(this);
-            adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
-                @Override
-                public void onItemClick(Rides name, int position) {
-                    Toast.makeText(MainActivity.this, "equisde", Toast.LENGTH_LONG).show();
-                    //ACCION kawai para cuando se le da click en un item de la lista
-                }
-            });
-
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(myLayoutManager);
-            recyclerView.setAdapter(adapter);
-        }*/
-
-
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.rites.models;
 
+import com.google.gson.annotations.Expose;
+
 public class Rides {
     private int id_ride;
     private String starting_point;

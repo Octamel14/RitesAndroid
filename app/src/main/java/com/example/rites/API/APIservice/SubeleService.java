@@ -15,8 +15,8 @@ public interface SubeleService {
         Call<List<Rides>> getRidesByDate(@Query("date")  String date);
 
     */
+
     @Headers( "Content-Type: application/json" )
     @GET("/rides")
-   // void getRides();
     Call<List<Rides>> getRides2();
 }
