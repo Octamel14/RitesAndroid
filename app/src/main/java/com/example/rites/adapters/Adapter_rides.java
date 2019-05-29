@@ -7,20 +7,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.rites.R;
-import com.example.rites.models.Rides;
+import com.example.rites.models.Ride;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder>
 {
-    private List<Rides> list;
+    private List<Ride> list;
     private  int layout;
 
     private OnItemClickListener listener;
 
-    public Adapter_rides(List<Rides> rides, int layout, OnItemClickListener listener)
+    public Adapter_rides(List<Ride> rides, int layout, OnItemClickListener listener)
     {
         this.list=rides;
         this.layout=layout;
@@ -71,7 +69,7 @@ public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder
             textView_cost=itemView.findViewById(R.id.textViewCost);
         }
 
-        public void bind(final Rides name, final OnItemClickListener listener)
+        public void bind(final Ride name, final OnItemClickListener listener)
         {
 
             textView_destination.setText("Destino: "+name.getDestination());
@@ -100,7 +98,7 @@ public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder
 
 
     public interface OnItemClickListener{
-        void onItemClick(Rides name, int position);
+        void onItemClick(Ride name, int position);
     }
 
 
