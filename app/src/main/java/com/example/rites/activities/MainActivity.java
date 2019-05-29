@@ -10,10 +10,10 @@ import android.widget.Toast;
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
-import com.example.rites.models.PostRide;
+import com.example.rites.adapters.Adapter_rides;
 import com.example.rites.models.Ride;
+import com.example.rites.models.RideFilter;
 
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,14 +32,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recyclerViewRites);
 
-      //  SubeleService service= API.getApi().create(SubeleService.class);
-       // Call<List<Ride>> call = service.getRides2();
-        List<Ride> rides= Collections.emptyList();
-        Ride ride=new Ride(0, "DICIS", "2019-05-26", "18:48:02", 4, 1, 30.0f, 1, 1, "Valle");
+        SubeleService service= API.getApi().create(SubeleService.class);
+        Call<List<RideFilter>> call = service.getRides2();
+        List<RideFilter> rides;
+
+       /* Ride ride=new Ride(0, "DICIS", "2019-05-26", "18:48:02", 4, 1, 30.0f, 1, 1, "Valle");
         SubeleService service= API.getApi().create(SubeleService.class);
         Call call=service.CreateRide(new PostRide(ride));
-
-        //Call call=service.CreateRide2(0, "DICIS", "Guanajuat", "2019-05-25", "18:46:03", 5, 1, 50.0f, 1, 1);
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) {
@@ -50,21 +49,22 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call call, Throwable t) {
 
             }
-        });
+        });*/
         myLayoutManager=new LinearLayoutManager(MainActivity.this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(myLayoutManager);
-        //////////////////////////////////////RETROFIT/////////////////////////////////////////////////
-        /*
-        call.enqueue(new Callback<List<Ride>>() {
+
+
+        call.enqueue(new Callback<List<RideFilter>>() {
             @Override
-            public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
-                List<Ride> rides=response.body();
+            public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
+                List<RideFilter> rides=response.body();
+
 
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
-                    public void onItemClick(Ride name, int position) {
+                    public void onItemClick(RideFilter name, int position) {
                         Toast.makeText(MainActivity.this, "equisde", Toast.LENGTH_LONG).show();
                         //ACCION kawai para cuando se le da click en un item de la lista
                     }
@@ -73,12 +73,12 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
             }
             @Override
-            public void onFailure(Call<List<Ride>> call, Throwable t) {
+            public void onFailure(Call<List<RideFilter>> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             //////////////////////////////////////////////////////////////////////////////////////////
-        });*/
+        });
     }
 
 }

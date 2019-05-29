@@ -8,17 +8,18 @@ import android.widget.TextView;
 
 import com.example.rites.R;
 import com.example.rites.models.Ride;
+import com.example.rites.models.RideFilter;
 
 import java.util.List;
 
 public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder>
 {
-    private List<Ride> list;
+    private List<RideFilter> list;
     private  int layout;
 
     private OnItemClickListener listener;
 
-    public Adapter_rides(List<Ride> rides, int layout, OnItemClickListener listener)
+    public Adapter_rides(List<RideFilter> rides, int layout, OnItemClickListener listener)
     {
         this.list=rides;
         this.layout=layout;
@@ -69,13 +70,13 @@ public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder
             textView_cost=itemView.findViewById(R.id.textViewCost);
         }
 
-        public void bind(final Ride name, final OnItemClickListener listener)
+        public void bind(final RideFilter name, final OnItemClickListener listener)
         {
 
             textView_destination.setText("Destino: "+name.getDestination());
             textView_starting_point.setText("Origen: "+name.getStarting_point());
-            textView_hostname.setText("Conductor: "+Integer.toString(name.getHost()));
-            textView_cost.setText("Precio: "+Float.toString(name.getCost()));
+            textView_hostname.setText("Conductor: "+ name.getHost().getFirst_name()+" "+ name.getHost().getLast_name());
+            textView_cost.setText("Precio: ");
             //DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
            // String date=df.format(name.getDate());
             //textView_date.setText(date);
@@ -98,7 +99,7 @@ public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder
 
 
     public interface OnItemClickListener{
-        void onItemClick(Ride name, int position);
+        void onItemClick(RideFilter name, int position);
     }
 
 
