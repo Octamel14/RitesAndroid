@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
                 List<RideFilter> rides=response.body();
 
-
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
                     public void onItemClick(RideFilter name, int position) {
