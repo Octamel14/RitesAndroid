@@ -26,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private  RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager myLayoutManager;
 
+    /*String opc_filter=getIntent().getStringExtra("variable_opc");
+    String res_filter=getIntent().getStringExtra("variable_respuesta");*/ //pasar parámetros a la interfaz
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(RideFilter name, int position) {
                         Toast.makeText(MainActivity.this, "equisde", Toast.LENGTH_LONG).show();
-                        //ACCION kawai para cuando se le da click en un item de la lista
+                        //ACCION kawai para cuando se le da click en un item de la lista minuto 3
                     }
                 });
 

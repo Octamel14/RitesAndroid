@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/hour"
+        android:title="Hour"/>
+    <item
+        android:id="@+id/starting_point"
+        android:title="Origen"/>
+    <item
+        android:id="@+id/destination"
+        android:title="Destion"/>
+    <item
+        android:id="@+id/intermediate"
+        android:title="Parada intermedia"/>
+    <item
+        android:id="@+id/day"
+        android:title="Día"/>
+</menu>
