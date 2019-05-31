@@ -14,10 +14,11 @@ import android.widget.Toast;
 
 import com.example.rites.R;
 
+import java.nio.channels.FileLock;
+
 public class FilterActivity extends AppCompatActivity {
     Button boton_filtro;
     EditText hour_view;
-    CalendarView date_view;
     EditText lugar_view;
     Button boton_buscar;
     TextView answer;
@@ -30,20 +31,16 @@ public class FilterActivity extends AppCompatActivity {
 
         boton_filtro = (Button) findViewById(R.id.button_filtro);
         hour_view = (EditText) findViewById(R.id.timeView);
-        date_view = (CalendarView) findViewById(R.id.calendarView);
         lugar_view = (EditText) findViewById(R.id.placeView);
         boton_buscar = (Button) findViewById(R.id.boton_buscar);
         answer = (TextView) findViewById(R.id.answerText);
 
         hour_view.setVisibility(View.INVISIBLE);
-        date_view.setVisibility(View.INVISIBLE);
         lugar_view.setVisibility(View.INVISIBLE);
-
         boton_filtro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hour_view.setVisibility(View.INVISIBLE);
-                date_view.setVisibility(View.INVISIBLE);
                 lugar_view.setVisibility(View.INVISIBLE);
                 PopupMenu popupMenu = new PopupMenu(FilterActivity.this, boton_filtro);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
@@ -58,29 +55,30 @@ public class FilterActivity extends AppCompatActivity {
                                 hour_view.setVisibility(View.VISIBLE);
                                 respuesta=hour_view.getText().toString();
                                 opc="hour";
+                                answer.setText("HORA");
                                 return  true;
                             case R.id.destination:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 respuesta=lugar_view.getText().toString();
                                 opc="destination";
-                                return  true;
-                            case R.id.day:
-                                date_view.setVisibility(View.VISIBLE);
-                                respuesta= String.valueOf(date_view.getDate());
-                                opc="date";
+                                answer.setText("DESTINO");
                                 return  true;
                             case R.id.starting_point:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 respuesta=lugar_view.getText().toString();
                                 opc="starting_point";
+                                answer.setText("ORIGEN");
                                 return  true;
                             case R.id.intermediate:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 respuesta=lugar_view.getText().toString();
-                                opc="intermediate_stop";
+                                opc="stop";
+                                answer.setText("PARADA INTERMEDIA");
                                 return  true;
                             default:
-                                return false;
+                                opc="non";
+                                answer.setText("TODOS");
+                                return true;
                         }
 
 
@@ -92,13 +90,15 @@ public class FilterActivity extends AppCompatActivity {
         boton_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answer.setText(opc); //Poder ver que valor retorna respuesta
-                /*
-                Intent intent = new Intent(FilterActivity.this, MainActivity.class);
-                intent.putExtra("variable_opc",opc);
-                intent.putExtra("variable_respuesta",respuesta);
-                startActivity(intent);
-                */
+                switch (opc){
+                    case "hour":
+                        respuesta=hour_view.getText().toString();
+                    default:
+                        respuesta=lugar_view.getText().toString();
+                }
+
+
+
             }
         });
     }
