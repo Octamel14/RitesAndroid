@@ -1,9 +1,8 @@
-package com.example.rites;
+package com.example.rites.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,9 +10,8 @@ import android.widget.Toast;
 
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
-import com.example.rites.activities.MainActivity;
+import com.example.rites.R;
 import com.example.rites.models.LogedUser;
-import com.example.rites.models.RideFilter;
 import com.example.rites.models.User;
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private String password;
     private Realm realm;
     private RealmResults<LogedUser> userx;
-
+    private Integer option;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +38,19 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
+
         userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
         if(userx.size()!=0){
-            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            if(userx.get(0).getIs_rider()==Boolean.FALSE) {
+                Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Intent intent=new Intent(LoginActivity.this, Rider_Activity.class);
+                startActivity(intent);
+
+            }
+
         }
 
         buttonLogin=findViewById(R.id.buttonLogin);
@@ -53,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 password=editTextPassword.getText().toString();
                 email=editTextEmail.getText().toString();
                 SubeleService service= API.getApi().create(SubeleService.class);
@@ -70,11 +76,16 @@ public class LoginActivity extends AppCompatActivity {
                                     realm.deleteAll();
                                     realm.copyToRealm(logedUser);
 
-
                                 }
                             });
-                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
+                            if(userx.get(0).getIs_rider()==Boolean.FALSE) {
+                                Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                            else{
+                                Intent intent=new Intent(LoginActivity.this, Rider_Activity.class);
+                                startActivity(intent);
+                            }
                         }
                     }
 
