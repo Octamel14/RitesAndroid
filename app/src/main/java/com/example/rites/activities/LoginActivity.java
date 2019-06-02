@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
         realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
 
+
         userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
         if(userx.size()!=0){
             if(userx.get(0).getIs_rider()==Boolean.FALSE) {
