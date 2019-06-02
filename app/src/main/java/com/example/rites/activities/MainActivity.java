@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     private  RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager myLayoutManager;
 
+<<<<<<< HEAD
     //FILTRO
     Button boton_filtro;
     EditText hour_view;
@@ -276,6 +277,9 @@ public class MainActivity extends AppCompatActivity {
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+=======
+                adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
+>>>>>>> 2fb3644b533d30e651397b5f8cef51eaf84b3a29
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         Toast.makeText(MainActivity.this,""+item.getTitle(),Toast.LENGTH_LONG).show();

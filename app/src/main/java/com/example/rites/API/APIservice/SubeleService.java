@@ -5,18 +5,22 @@ import android.os.Bundle;
 
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
+import com.example.rites.models.User;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+<<<<<<< HEAD
 
 import android.content.Intent;
+=======
+>>>>>>> 2fb3644b533d30e651397b5f8cef51eaf84b3a29
 
 public interface SubeleService {
     @Headers( "Content-Type: application/json" )
@@ -39,6 +43,9 @@ public interface SubeleService {
     @GET("/ridesfilter")
     Call<List<RideFilter>> getRides();
 
+    @Headers( "Content-Type: application/json" )
+    @GET("/users/?")
+    Call<List<User>> getUserLogin(@Query("email") String email, @Query("password") String password);
     //@Headers( "Content-Type: application/json" )
     //@POST("/rides/")
     //Call <ResponseBody>  CreateRide(@Body PostRide ride);
