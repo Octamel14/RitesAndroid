@@ -47,6 +47,10 @@ public interface SubeleService {
     @GET("/users/?")
     Call<List<User>> getUserLogin(@Query("email") String email, @Query("password") String password);
     //@Headers( "Content-Type: application/json" )
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/ridesfilter/?")
+    Call<List<RideFilter>> getRidesByDate(@Query("hour") String hour);
     //@POST("/rides/")
     //Call <ResponseBody>  CreateRide(@Body PostRide ride);
 
