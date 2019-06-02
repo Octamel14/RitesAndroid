@@ -6,18 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+    <Button
+        android:id="@+id/button_filtro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Filtrar por:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/answerText"
+        android:layout_width="139dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginLeft="144dp"
+        android:text="TODOS"
+        app:layout_constraintStart_toStartOf="@id/button_filtro"
+        app:layout_constraintTop_toTopOf="@id/button_filtro"
+        app:layout_constraintLeft_toRightOf="@id/button_filtro" />
+
+    <EditText
+        android:id="@+id/timeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintTop_toBottomOf="@id/button_filtro" />
+
+    <EditText
+        android:id="@+id/placeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintTop_toBottomOf="@id/button_filtro" />
+
+    <Button
+        android:id="@+id/boton_buscar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="248dp"
+        android:layout_marginLeft="248dp"
+        android:layout_marginTop="20dp"
+        android:text="Buscar"
+        app:layout_constraintLeft_toRightOf="@id/timeView"
+        app:layout_constraintStart_toStartOf="@id/timeView"
+        app:layout_constraintTop_toTopOf="@id/timeView" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewRites"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/placeView"
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>
