@@ -3,9 +3,11 @@ package com.example.rites.API.APIservice;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.rites.models.IntermediateStop;
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
 import com.example.rites.models.User;
+import com.example.rites.models.Vehicle;
 
 import java.util.List;
 
@@ -46,8 +48,16 @@ public interface SubeleService {
     //@Headers( "Content-Type: application/json" )
 
     @Headers( "Content-Type: application/json" )
-    @GET("/ridesfilter/?")
-    Call<List<RideFilter>> getRidesByDate(@Query("hour") String hour);
+    @GET("/rides/?")
+    Call<List<Ride>> getRideDetails(@Query("id_ride") String id_ride);
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/intermediatestops/?")
+    Call<List<IntermediateStop>> getStop(@Query("ride_id") String ride_id);
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/vehicles/?")
+    Call<List<Vehicle>> getVehicle(@Query("id_vehicle") String id_vehicle);
     //@POST("/rides/")
     //Call <ResponseBody>  CreateRide(@Body PostRide ride);
 

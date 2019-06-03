@@ -1,6 +1,8 @@
 package com.example.rites.models;
 
-public class Host {
+import java.io.Serializable;
+
+public class Host implements Serializable {
     private int id_user;
     private String first_name;
     private String last_name;

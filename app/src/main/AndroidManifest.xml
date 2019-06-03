@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.RideDetailsActivity"></activity>
     </application>
 
 </manifest>
