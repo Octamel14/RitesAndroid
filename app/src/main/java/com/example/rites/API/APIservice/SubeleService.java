@@ -16,11 +16,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-<<<<<<< HEAD
 
 import android.content.Intent;
-=======
->>>>>>> 2fb3644b533d30e651397b5f8cef51eaf84b3a29
 
 public interface SubeleService {
     @Headers( "Content-Type: application/json" )
