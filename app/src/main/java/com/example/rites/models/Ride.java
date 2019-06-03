@@ -1,34 +1,22 @@
 package com.example.rites.models;
 
-import com.google.gson.annotations.Expose;
-
 public class Ride {
-    @Expose
-    private int id_ride;
-    @Expose
+    private String id_ride;
     private String starting_point;
-    @Expose
     private String destination;
-    @Expose
     private String date;
-    @Expose
     private String hour;
-    @Expose
-    private int room;
-    @Expose
-    private int n_stops;
-    @Expose
-    private float cost;
-    @Expose
-    private int host;
-    @Expose
-    private int vehicle;
+    private String room;
+    private String n_stops;
+    private String cost;
+    private String host;
+    private String vehicle;
 
     Ride(){}
 
 
 
-    public Ride(int id_ride, String starting_point, String date, String hour, int room, int n_stops, float cost, int host, int vehicle, String destination) {
+    public Ride(String id_ride, String starting_point, String date, String hour, String room, String n_stops, String cost, String host, String vehicle, String destination) {
         this.id_ride = id_ride;
         this.starting_point = starting_point;
         this.date = date;
@@ -50,11 +38,11 @@ public class Ride {
         this.destination = destination;
     }
 
-    public int getId_ride() {
+    public String getId_ride() {
         return id_ride;
     }
 
-    public void setId_ride(int id_ride) {
+    public void setId_ride(String id_ride) {
         this.id_ride = id_ride;
     }
 
@@ -82,43 +70,43 @@ public class Ride {
         this.hour = hour;
     }
 
-    public int getRoom() {
+    public String getRoom() {
         return room;
     }
 
-    public void setRoom(int room) {
+    public void setRoom(String room) {
         this.room = room;
     }
 
-    public int getN_stops() {
+    public String getN_stops() {
         return n_stops;
     }
 
-    public void setN_stops(int n_stops) {
+    public void setN_stops(String n_stops) {
         this.n_stops = n_stops;
     }
 
-    public float getCost() {
+    public String getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(String cost) {
         this.cost = cost;
     }
 
-    public int getHost() {
+    public String getHost() {
         return host;
     }
 
-    public void setHost(int host) {
+    public void setHost(String host) {
         this.host = host;
     }
 
-    public int getVehicle() {
+    public String getVehicle() {
         return vehicle;
     }
 
-    public void setVehicle(int vehicle) {
+    public void setVehicle(String vehicle) {
         this.vehicle = vehicle;
     }
 }

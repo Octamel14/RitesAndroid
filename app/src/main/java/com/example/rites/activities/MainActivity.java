@@ -18,6 +18,7 @@ import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
 import com.example.rites.adapters.Adapter_rides;
+import com.example.rites.models.Host;
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
 
@@ -34,17 +35,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager myLayoutManager;
 
     //FILTRO
-    Button boton_filtro;
-    EditText hour_view;
-    EditText lugar_view;
-    Button boton_buscar;
-    TextView answer;
+    private Button boton_filtro;
+    private EditText hour_view;
+    private EditText lugar_view;
+    private Button boton_buscar;
+    private TextView answer;
     private String respuesta_filter;
     private String opc_filter = "non";
-    Call<List<RideFilter>> call;
-    SubeleService service= null;
-
-    String prueba;
+    private Call<List<RideFilter>> call;
+    private SubeleService service= null;
+    private Host host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,18 +155,24 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<List<RideFilter>>() {
                     @Override
                     public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
-                        List<RideFilter> rides=response.body();
+                        final List<RideFilter> rides=response.body();
 
-                        final List<RideFilter> rides2;
-                        rides2=rides;
 
 
                         adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                             @Override
                             public void onItemClick(RideFilter name, int position) {
-                                prueba = rides2.get(position).toString();
-                                Toast.makeText(MainActivity.this, prueba, Toast.LENGTH_LONG).show();
+                                final String ride_id = rides.get(position).getId_ride().toString();
+                                final Host h= rides.get(position).getHost();
+                                Toast.makeText(MainActivity.this, ride_id, Toast.LENGTH_LONG).show();
                                 //ACCION kawai para cuando se le da click en un item de la lista minuto 3
+                                Intent intent = new Intent(MainActivity.this,RideDetailsActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("ride_id",ride_id);
+                                bundle.putInt("opc",0); //opc=0=no mostar detalles del vehiculo | 1=mostrar
+                                bundle.putSerializable("host",h);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
                             }
                         });
 
