@@ -58,8 +58,15 @@ public interface SubeleService {
     @Headers( "Content-Type: application/json" )
     @GET("/vehicles/?")
     Call<List<Vehicle>> getVehicle(@Query("id_vehicle") String id_vehicle);
-    //@POST("/rides/")
-    //Call <ResponseBody>  CreateRide(@Body PostRide ride);
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/vehicles/?")
+    Call<List<Vehicle>> getVehicleByUserID(@Query("user") String user);
+
+
+    @Headers( "Content-Type: application/json" )
+    @POST("/rides/")
+     Call<Ride>  CreateRide(@Body Ride ride);
 
 
 
