@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.rites.R;
-import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
 
 import java.util.List;

@@ -12,8 +12,6 @@ public class Ride {
     private String host;
     private String vehicle;
 
-    Ride(){}
-
 
 
     public Ride(String id_ride, String starting_point, String date, String hour, String room, String n_stops, String cost, String host, String vehicle, String destination) {

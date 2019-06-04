@@ -53,7 +53,7 @@ public interface SubeleService {
 
     @Headers( "Content-Type: application/json" )
     @GET("/intermediatestops/?")
-    Call<List<IntermediateStop>> getStop(@Query("ride_id") String ride_id);
+    Call<List<IntermediateStop>> getStop(@Query("id_ride") String ride_id);
 
     @Headers( "Content-Type: application/json" )
     @GET("/vehicles/?")

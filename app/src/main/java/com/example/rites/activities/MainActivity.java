@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                         final List<RideFilter> rides=response.body();
 
 
-
                         adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                             @Override
                             public void onItemClick(RideFilter name, int position) {
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                                 Intent intent = new Intent(MainActivity.this,RideDetailsActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("ride_id",ride_id);
-                                bundle.putInt("opc",0); //opc=0=no mostar detalles del vehiculo | 1=mostrar
+                                bundle.putInt("opc",1); //opc=0=no mostar detalles del vehiculo | 1=mostrar
                                 bundle.putSerializable("host",h);
                                 intent.putExtras(bundle);
                                 startActivity(intent);

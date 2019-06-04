@@ -3,12 +3,18 @@ package com.example.rites.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
+import com.example.rites.adapters.Adapter_stops;
 import com.example.rites.models.Host;
 import com.example.rites.models.IntermediateStop;
 import com.example.rites.models.Ride;
@@ -36,9 +42,17 @@ public class RideDetailsActivity extends AppCompatActivity {
     private TextView hour;
     private TextView room;
     private TextView cost;
-    private TextView vehicle;
+    private TextView vehicle_model;
+    private TextView vehicle_color;
+    private TextView vehicle_plates;
     private TextView n_stops;
-    private TextView stops;
+    private Button b_regresar;
+    private Button b_solicitar;
+
+    //Recycler view
+    private RecyclerView recyclerView;
+    private  RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager myLayoutManager;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -49,21 +63,35 @@ public class RideDetailsActivity extends AppCompatActivity {
         h_firstname = (TextView) findViewById(R.id.host_firstname);
         h_lastname = (TextView) findViewById(R.id.host_lastname);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
-        destination = (TextView) findViewById(R.id.destination);
+        destination = (TextView) findViewById(R.id.textView_destination);
         date = (TextView) findViewById(R.id.textView_date);
         hour = (TextView) findViewById(R.id.textView_hour);
         room = (TextView) findViewById(R.id.room);
         cost = (TextView) findViewById(R.id.textViewCost);
-        vehicle = (TextView) findViewById(R.id.vehicle);
+        vehicle_model = (TextView) findViewById(R.id.vehicle_model);
+        vehicle_color = (TextView) findViewById(R.id.vehicle_color);
+        vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
-        stops = (TextView) findViewById(R.id.rv_stops);
+        b_regresar = (Button) findViewById(R.id.button_regresar);
+        b_solicitar = (Button) findViewById(R.id.button_solicitar);
+        //recylcer view
+        recyclerView=findViewById(R.id.recyclerViewStop);
+        myLayoutManager=new LinearLayoutManager(RideDetailsActivity.this);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(myLayoutManager);
 
 
-        //Main Activity Params
+        //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
         opc = (int) ride_basics.getInt("opc");
         ride_id = (String) ride_basics.getString("ride_id");
         host = (Host) ride_basics.getSerializable("host");
+
+        //Set to Layout
+        id_ride.setText(ride_id);
+        h_firstname.setText(host.getFirst_name());
+        h_lastname.setText(host.getLast_name());
 
         //Ride Model
         SubeleService service  = API.getApi().create(SubeleService.class);
@@ -71,7 +99,9 @@ public class RideDetailsActivity extends AppCompatActivity {
         call_ride.enqueue(new Callback<List<Ride>>() {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
-                List<Ride> ride = response.body();
+                final List<Ride> ride = response.body();
+                final int s = ride.size();
+
                 starting_point.setText("Origen: "+ride.get(0).getStarting_point());
                 destination.setText("Destino: "+ride.get(0).getDestination());
                 date.setText("Día: "+ride.get(0).getDate());
@@ -79,7 +109,9 @@ public class RideDetailsActivity extends AppCompatActivity {
                 room.setText("Lugares Disponibles: "+ride.get(0).getRoom());
                 cost.setText("Costo: "+ride.get(0).getCost());
                 n_stops.setText("Paradas Intermedias: "+ride.get(0).getN_stops());
+
                 vehicle_id = ride.get(0).getVehicle();
+
             }
 
             @Override
@@ -88,19 +120,20 @@ public class RideDetailsActivity extends AppCompatActivity {
             }
         });
 
-        if (opc==1){ //Si se veran detalles del vehiculo, para Vista de -mi riteActual o yo que se xd
+        if (opc==1) { //Si se veran detalles del vehiculo, para Vista de -mi riteActual o yo que se xd
            Call<List<Vehicle>> call_vehicle = service.getVehicle(vehicle_id);
            call_vehicle.enqueue(new Callback<List<Vehicle>>() {
                @Override
                public void onResponse(Call<List<Vehicle>> call, Response<List<Vehicle>> response) {
                    List<Vehicle> vehicle_item = response.body();
-                   vehicle.setText("Vehiculi_id: "+vehicle_id.toString());
-                   //mostrar datos vehiculo
+                   vehicle_model.setText("Modelo: "+vehicle_item.get(0).getModel());
+                   vehicle_color.setText("Color: "+vehicle_item.get(0).getColor());
+                   vehicle_plates.setText("Placas: "+vehicle_item.get(0).getPlates());
                }
 
                @Override
                public void onFailure(Call<List<Vehicle>> call, Throwable t) {
-
+                   Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                }
            });
         }
@@ -110,19 +143,30 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<IntermediateStop>> call, Response<List<IntermediateStop>> response) {
                 List<IntermediateStop> stops = response.body();
-                //recicler view de las stops;
+                adapter = new Adapter_stops(stops,R.layout.recycler_view_stop_item);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<List<IntermediateStop>> call, Throwable t) {
-
+                Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
-        //Set to Layout
-        id_ride.setText(ride_id);
-        h_firstname.setText(host.getFirst_name());
-        h_lastname.setText(host.getLast_name());
+        b_regresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RideDetailsActivity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        b_solicitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //hacer post
+            }
+        });
 
     }
 }

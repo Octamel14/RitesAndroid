@@ -90,13 +90,29 @@
         app:layout_constraintTop_toBottomOf="@id/room" />
 
     <TextView
-        android:id="@+id/vehicle"
+        android:id="@+id/vehicle_model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="104dp"
+        android:layout_marginLeft="104dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewCost" />
+
+    <TextView
+        android:id="@+id/vehicle_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCost" />
+        app:layout_constraintTop_toTopOf="@id/vehicle_model"
+        app:layout_constraintLeft_toRightOf="@+id/vehicle_model"/>
+    <TextView
+        android:id="@+id/vehicle_plates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintTop_toTopOf="@id/vehicle_color"
+        app:layout_constraintLeft_toRightOf="@+id/vehicle_color"/>
 
     <TextView
         android:id="@+id/n_stops"
@@ -105,15 +121,40 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/room" />
+        app:layout_constraintTop_toBottomOf="@id/vehicle_model" />
 
-    <TextView
-        android:id="@+id/rv_stops"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewStop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/n_stops"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button_regresar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Regresar a Lista"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="210dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/n_stops" />
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewStop" />
 
+    <Button
+        android:id="@+id/button_solicitar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="116dp"
+        android:text="Solicitar Raite"
+        app:layout_constraintLeft_toRightOf="@id/button_regresar"
+        app:layout_constraintTop_toTopOf="@id/button_regresar" />
 </android.support.constraint.ConstraintLayout>
