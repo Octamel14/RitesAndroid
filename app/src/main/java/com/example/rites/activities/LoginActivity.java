@@ -3,6 +3,7 @@ package com.example.rites.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private Button buttonLogin;
+    private Button buttonCreate;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private String email;
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         buttonLogin=findViewById(R.id.buttonLogin);
+        buttonCreate=findViewById(R.id.buttonCreate);
         editTextEmail=findViewById(R.id.editTextEmail);
         editTextPassword=findViewById(R.id.editTextPassword);
 
@@ -96,6 +99,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        buttonCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
+                startActivity(intent);
             }
         });
     }
