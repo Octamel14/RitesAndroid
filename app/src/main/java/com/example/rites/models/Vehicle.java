@@ -3,7 +3,7 @@ package com.example.rites.models;
 public class Vehicle {
 
     private String id_vehicle;
-    private String user_id;
+    private String user;
     private String model;
     private String color;
     private String plates;
@@ -12,7 +12,7 @@ public class Vehicle {
 
     public Vehicle(String id_vehicle, String user_id, String model, String color, String plates){
         this.id_vehicle = id_vehicle;
-        this.user_id = user_id;
+        this.user = user_id;
         this.model = model;
         this.color = color;
         this.plates = plates;
@@ -22,9 +22,9 @@ public class Vehicle {
 
     public void setId_vehicle(String  id_vehicle){this.id_vehicle = id_vehicle;}
 
-    public String getUser_id() {return user_id;}
+    public String getUser() {return user;}
 
-    public void setUser_id(String  user_id){this.user_id = user_id;}
+    public void setUser(String  user_id){this.user = user_id;}
 
     public String getModel() {return model;}
 

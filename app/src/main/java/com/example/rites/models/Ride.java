@@ -5,16 +5,20 @@ public class Ride {
     private String starting_point;
     private String destination;
     private String date;
+
+
+
     private String hour;
     private String room;
     private String n_stops;
     private String cost;
     private String host;
     private String vehicle;
+    private String is_active;
 
 
 
-    public Ride(String id_ride, String starting_point, String date, String hour, String room, String n_stops, String cost, String host, String vehicle, String destination) {
+    public Ride(String id_ride, String starting_point, String date, String hour, String room, String n_stops, String cost, String host, String vehicle, String destination, String is_active) {
         this.id_ride = id_ride;
         this.starting_point = starting_point;
         this.date = date;
@@ -23,10 +27,18 @@ public class Ride {
         this.room = room;
         this.n_stops = n_stops;
         this.cost = cost;
+        this.is_active=is_active;
         this.host = host;
         this.vehicle = vehicle;
     }
 
+    public String getIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(String is_active) {
+        this.is_active = is_active;
+    }
 
     public String getDestination() {
         return destination;

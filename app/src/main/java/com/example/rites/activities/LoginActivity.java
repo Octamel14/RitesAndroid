@@ -3,6 +3,7 @@ package com.example.rites.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,8 @@ import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
 import com.example.rites.models.LogedUser;
 import com.example.rites.models.User;
+import com.example.rites.models.Vehicle;
+
 import java.util.List;
 
 import io.realm.Realm;
@@ -24,6 +27,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private Button buttonLogin;
+    private Button buttonCreate;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private String email;
@@ -38,8 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
-
-
         userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
         if(userx.size()!=0){
             if(userx.get(0).getIs_rider()==Boolean.FALSE) {
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         buttonLogin=findViewById(R.id.buttonLogin);
+        buttonCreate=findViewById(R.id.buttonCreate);
         editTextEmail=findViewById(R.id.editTextEmail);
         editTextPassword=findViewById(R.id.editTextPassword);
 
@@ -68,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 email=editTextEmail.getText().toString();
                 SubeleService service= API.getApi().create(SubeleService.class);
                 Call <List<User>> call = service.getUserLogin(email, password);
+
                 call.enqueue(new Callback<List<User>>() {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -102,6 +106,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+        });
+
+        buttonCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
+                startActivity(intent);
             }
         });
     }
