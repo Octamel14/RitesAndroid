@@ -14,6 +14,8 @@ import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
 import com.example.rites.models.LogedUser;
 import com.example.rites.models.User;
+import com.example.rites.models.Vehicle;
+
 import java.util.List;
 
 import io.realm.Realm;
@@ -40,8 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
-
-
         userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
         if(userx.size()!=0){
             if(userx.get(0).getIs_rider()==Boolean.FALSE) {
@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                 email=editTextEmail.getText().toString();
                 SubeleService service= API.getApi().create(SubeleService.class);
                 Call <List<User>> call = service.getUserLogin(email, password);
+
                 call.enqueue(new Callback<List<User>>() {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
