@@ -1,6 +1,8 @@
 package com.example.rites.activities;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,15 +44,14 @@ public class Rider_Activity extends AppCompatActivity {
     private List<Vehicle> vehicles;
     private List<String> vehiclesModel=new LinkedList<String>();
     private List<String> DayOptions=new LinkedList<String>();
-
+    private Integer vehicle_id;
     private String startingPoint;
     private String destination;
-    private String date;
-    private String Carmodel;
     private String Fullhour;
     private  Integer room;
     private double cost;
     private Integer user_id;
+    private String formattedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,20 +71,35 @@ public class Rider_Activity extends AppCompatActivity {
         realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
         userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
         user_id=userx.get(0).getId_user();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         SubeleService service= API.getApi().create(SubeleService.class);
         Call<List<Vehicle>> call = service.getVehicleByUserID(Integer.toString(userx.get(0).getId_user()));
         call.enqueue(new Callback<List<Vehicle>>() {
             @Override
             public void onResponse(Call<List<Vehicle>> call, Response<List<Vehicle>> response) {
                 vehicles= response.body();
-                for(int i=0; i<vehicles.size(); i++){
-                    vehiclesModel.add(vehicles.get(i).getModel());
+                if(vehicles.size()==0){
+                    Toast.makeText(Rider_Activity.this, "Debes registrar un vehículo", Toast.LENGTH_SHORT);
+                    Intent intent = new Intent(Rider_Activity.this, CreateVehicleActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    for(int i=0; i<vehicles.size(); i++){
+                        vehiclesModel.add(vehicles.get(i).getModel());
+                    }
                 }
 
             }
 
             @Override
             public void onFailure(Call<List<Vehicle>> call, Throwable t) {
+                Toast.makeText(Rider_Activity.this, "No se pudo conectar a la base de datos", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -92,9 +108,8 @@ public class Rider_Activity extends AppCompatActivity {
     }
 
     private void showAlertForCreatingRide(String title){
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
         if(title!=null) builder.setTitle(title);
-
         View viewInflated= LayoutInflater.from(this).inflate(R.layout.dialog_create_ride, null);
         builder.setView(viewInflated);
         final Spinner spinnerDay=viewInflated.findViewById(R.id.spinner_create_ride_Date);
@@ -115,54 +130,66 @@ public class Rider_Activity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-
-                if(editTextStartingPoint.length()!=0 && editTextCost.length()!=0 && editTextDestination.length()!=0 && editTextRoom.length()!=0){
-                startingPoint=editTextStartingPoint.getText().toString();
-                destination=editTextDestination.getText().toString();
-                cost=Double.parseDouble(editTextCost.getText().toString());
-                Integer room=Integer.parseInt(editTextRoom.getText().toString());
-
-                }
-                else{
-                    Toast.makeText(Rider_Activity.this, "Revise los datos", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Integer position=spinnerCar.getSelectedItemPosition();
-                Integer vehicle_id=Integer.parseInt(vehicles.get(position).getId_vehicle());
-
-                Carmodel=spinnerCar.getSelectedItem().toString();
-                date=spinnerDay.getSelectedItem().toString();
-                int hour=timePicker.getCurrentHour();
-                int minute=timePicker.getCurrentMinute();
-                Fullhour=hour+":"+minute+":00";
-                Date c = Calendar.getInstance().getTime();
-                System.out.println("Current time => " + c);
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String formattedDate = df.format(c);
-
-
-
-
-
-                SubeleService service= API.getApi().create(SubeleService.class);
-                Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "False");
-                Call call=service.CreateRide(ride);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onResponse(Call call, Response response) {
-
-                    }
-
-                    @Override
-                    public void onFailure(Call call, Throwable t) {
-
-                    }
-                });
             }
-
-
         });
-        AlertDialog dialog=builder.create();
+        final AlertDialog dialog=builder.create();
         dialog.show();
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(editTextStartingPoint.length()!=0 && editTextCost.length()!=0 && editTextDestination.length()!=0 && editTextRoom.length()!=0){
+                            startingPoint=editTextStartingPoint.getText().toString();
+                            destination=editTextDestination.getText().toString();
+                            cost=Double.parseDouble(editTextCost.getText().toString());
+                            Integer room=Integer.parseInt(editTextRoom.getText().toString());
+                            int hour=timePicker.getCurrentHour();
+                            int minute=timePicker.getCurrentMinute();
+                            Fullhour=hour+":"+minute+":00";
+
+                            if(spinnerDay.getSelectedItemPosition()==0){
+                                Date c = Calendar.getInstance().getTime();
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                                Calendar calendar=Calendar.getInstance();
+                                calendar.setTime(c);
+                                calendar.add(Calendar.DATE, 0);
+                                formattedDate = df.format(calendar.getTime());
+                            }
+                            else{
+                                Date c = Calendar.getInstance().getTime();
+                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                                Calendar calendar=Calendar.getInstance();
+                                calendar.setTime(c);
+                                calendar.add(Calendar.DATE, 1);
+                                formattedDate = df.format(calendar.getTime());
+                            }
+
+
+                            Integer position=spinnerCar.getSelectedItemPosition();
+                            vehicle_id=Integer.parseInt(vehicles.get(position).getId_vehicle());
+                            SubeleService service= API.getApi().create(SubeleService.class);
+                            Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "False");
+                            Call call=service.CreateRide(ride);
+                            call.enqueue(new Callback() {
+                                @Override
+                                public void onResponse(Call call, Response response) {
+                                    Toast.makeText(Rider_Activity.this, "Ride creado exitósamente", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onFailure(Call call, Throwable t) {
+
+                                }
+                            });
+                        }
+                        else{
+                            Toast.makeText(Rider_Activity.this, "Revise los datos", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+        );
     }
 }

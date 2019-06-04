@@ -73,5 +73,9 @@ public interface SubeleService {
     @POST("/vehicles/")
     Call<Vehicle> postVehicle(@Body Vehicle vehicle);
 
+    @Headers( "Content-Type: application/json" )
+    @GET("/vehicles/?")
+    Call<List<Vehicle>> getVehicleByUserID(@Query("user") String user);
+
 
 }
