@@ -24,6 +24,19 @@ public class LogedUser extends RealmObject {
 
     public LogedUser(){}
 
+    public LogedUser(User user)
+    {
+        id_user = user.getId_user();
+        first_name = user.getFirst_name();
+        last_name = user.getLast_name();
+        email = user.getEmail();
+        password = user.getPassword();
+        is_rider = user.getIs_rider();
+        rider_score = user.getRider_score();
+        riders_number = user.getRiders_number();
+        scored = user.getScored();
+    }
+
     public LogedUser(Integer id_user, String first_name, String last_name, String email, String password, Boolean is_rider, int rider_score, int riders_number, int scored) {
         this.id_user = id_user;
         this.first_name = first_name;

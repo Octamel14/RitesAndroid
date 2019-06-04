@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.Rider_Activity"></activity>
+        <activity android:name=".activities.Rider_Activity" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MainActivity"></activity>
-        <activity android:name=".activities.RideDetailsActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.RideDetailsActivity" />
+        <activity android:name=".activities.CreateUserActivity" />
+        <activity android:name=".activities.CreateVehicleActivity"></activity>
     </application>
 
 </manifest>
