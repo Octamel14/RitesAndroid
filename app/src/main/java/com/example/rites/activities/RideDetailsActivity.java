@@ -29,12 +29,12 @@ import retrofit2.Response;
 public class RideDetailsActivity extends AppCompatActivity {
 
     private int opc;
+    private String opc_filter;
     private String ride_id;
     private Host host;
     private String vehicle_id;
 
-    private TextView h_firstname;
-    private TextView h_lastname;
+    private TextView h_name;
     private TextView id_ride;
     private TextView starting_point;
     private TextView destination;
@@ -60,8 +60,7 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         //Initialice Layout components
         id_ride = (TextView) findViewById(R.id.id_ride) ;
-        h_firstname = (TextView) findViewById(R.id.host_firstname);
-        h_lastname = (TextView) findViewById(R.id.host_lastname);
+        h_name = (TextView) findViewById(R.id.host_name);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
         destination = (TextView) findViewById(R.id.textView_destination);
         date = (TextView) findViewById(R.id.textView_date);
@@ -84,14 +83,14 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
+        opc_filter = (String) ride_basics.getString("opc_filter"); //Cuando button=Regresar, regresar a la busqueda en la que se encontraba
         opc = (int) ride_basics.getInt("opc");
         ride_id = (String) ride_basics.getString("ride_id");
         host = (Host) ride_basics.getSerializable("host");
-
+        Toast.makeText(RideDetailsActivity.this, opc_filter, Toast.LENGTH_LONG).show();
         //Set to Layout
-        id_ride.setText(ride_id);
-        h_firstname.setText(host.getFirst_name());
-        h_lastname.setText(host.getLast_name());
+        id_ride.setText("ID:"+ride_id);
+        h_name.setText("Conductor: "+host.getFirst_name().toUpperCase() +" "+ host.getLast_name().toUpperCase());
 
         //Ride Model
         SubeleService service  = API.getApi().create(SubeleService.class);
@@ -157,6 +156,9 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RideDetailsActivity.this,MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("opc_filter",opc_filter);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

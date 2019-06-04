@@ -53,7 +53,7 @@ public class Adapter_stops extends RecyclerView.Adapter<Adapter_stops.ViewHolder
 
         public void bind(final IntermediateStop name, final int position)
         {
-            textView_stop.setText(String.valueOf(position)+": "+name.getPlace());
+            textView_stop.setText(String.valueOf(position+1)+": "+name.getPlace());
         }
     }
 }

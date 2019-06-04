@@ -44,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         if(userx.size()!=0){
             if(userx.get(0).getIs_rider()==Boolean.FALSE) {
                 Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("opc_filter","non");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
             else{
@@ -81,6 +84,9 @@ public class LoginActivity extends AppCompatActivity {
                             });
                             if(userx.get(0).getIs_rider()==Boolean.FALSE) {
                                 Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("opc_filter","non");
+                                intent.putExtras(bundle);
                                 startActivity(intent);
                             }
                             else{
