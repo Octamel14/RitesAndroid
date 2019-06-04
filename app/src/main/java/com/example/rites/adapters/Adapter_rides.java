@@ -76,7 +76,7 @@ public class Adapter_rides extends RecyclerView.Adapter<Adapter_rides.ViewHolder
             textView_destination.setText("Destino: "+name.getDestination());
             textView_starting_point.setText("Origen: "+name.getStarting_point());
             textView_hostname.setText("Conductor: "+ name.getHost().getFirst_name()+" "+ name.getHost().getLast_name());
-            textView_cost.setText("Precio: ");
+            textView_cost.setText("Precio: "+name.getCost());
             //DateFormat df=new SimpleDateFormat("dd/MM/yyyy");
            // String date=df.format(name.getDate());
             //textView_date.setText(date);
