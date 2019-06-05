@@ -1,21 +1,33 @@
 package com.example.rites.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
 import com.example.rites.R;
+import com.example.rites.adapters.Adapter_stops;
 import com.example.rites.models.Host;
 import com.example.rites.models.IntermediateStop;
+import com.example.rites.models.LogedUser;
 import com.example.rites.models.Ride;
+import com.example.rites.models.RideGuest;
 import com.example.rites.models.Vehicle;
 
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,8 +39,10 @@ public class RideDetailsActivity extends AppCompatActivity {
     private Host host;
     private String vehicle_id;
 
-    private TextView h_firstname;
-    private TextView h_lastname;
+    private Realm realm;
+    private RealmResults<LogedUser> userx;
+
+    private TextView h_name;
     private TextView id_ride;
     private TextView starting_point;
     private TextView destination;
@@ -36,9 +50,19 @@ public class RideDetailsActivity extends AppCompatActivity {
     private TextView hour;
     private TextView room;
     private TextView cost;
-    private TextView vehicle;
+    private TextView vehicle_model;
+    private TextView vehicle_color;
+    private TextView vehicle_plates;
     private TextView n_stops;
-    private TextView stops;
+    private Button b_solicitar;
+
+    //Recycler view
+    private RecyclerView recyclerView;
+    private  RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager myLayoutManager;
+
+    SubeleService service  = API.getApi().create(SubeleService.class);
+    private List<Ride> ride = null;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -46,32 +70,42 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         //Initialice Layout components
         id_ride = (TextView) findViewById(R.id.id_ride) ;
-        h_firstname = (TextView) findViewById(R.id.host_firstname);
-        h_lastname = (TextView) findViewById(R.id.host_lastname);
+        h_name = (TextView) findViewById(R.id.host_name);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
-        destination = (TextView) findViewById(R.id.destination);
+        destination = (TextView) findViewById(R.id.textView_destination);
         date = (TextView) findViewById(R.id.textView_date);
         hour = (TextView) findViewById(R.id.textView_hour);
         room = (TextView) findViewById(R.id.room);
         cost = (TextView) findViewById(R.id.textViewCost);
-        vehicle = (TextView) findViewById(R.id.vehicle);
+        vehicle_model = (TextView) findViewById(R.id.vehicle_model);
+        vehicle_color = (TextView) findViewById(R.id.vehicle_color);
+        vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
-        stops = (TextView) findViewById(R.id.rv_stops);
+        b_solicitar = (Button) findViewById(R.id.button_solicitar);
+        //recylcer view
+        recyclerView=findViewById(R.id.recyclerViewStop);
+        myLayoutManager=new LinearLayoutManager(RideDetailsActivity.this);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(myLayoutManager);
 
 
-        //Main Activity Params
+        //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
         opc = (int) ride_basics.getInt("opc");
         ride_id = (String) ride_basics.getString("ride_id");
         host = (Host) ride_basics.getSerializable("host");
+        //Set to Layout
+        id_ride.setText("ID:"+ride_id);
+        h_name.setText("Conductor: "+host.getFirst_name().toUpperCase() +" "+ host.getLast_name().toUpperCase());
 
         //Ride Model
-        SubeleService service  = API.getApi().create(SubeleService.class);
         Call<List<Ride>> call_ride = service.getRideDetails(ride_id);
         call_ride.enqueue(new Callback<List<Ride>>() {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
-                List<Ride> ride = response.body();
+                 ride = response.body();
+
                 starting_point.setText("Origen: "+ride.get(0).getStarting_point());
                 destination.setText("Destino: "+ride.get(0).getDestination());
                 date.setText("Día: "+ride.get(0).getDate());
@@ -79,7 +113,9 @@ public class RideDetailsActivity extends AppCompatActivity {
                 room.setText("Lugares Disponibles: "+ride.get(0).getRoom());
                 cost.setText("Costo: "+ride.get(0).getCost());
                 n_stops.setText("Paradas Intermedias: "+ride.get(0).getN_stops());
+
                 vehicle_id = ride.get(0).getVehicle();
+
             }
 
             @Override
@@ -88,19 +124,20 @@ public class RideDetailsActivity extends AppCompatActivity {
             }
         });
 
-        if (opc==1){ //Si se veran detalles del vehiculo, para Vista de -mi riteActual o yo que se xd
+        if (opc==1) { //Si se veran detalles del vehiculo, para Vista de -mi riteActual o yo que se xd
            Call<List<Vehicle>> call_vehicle = service.getVehicle(vehicle_id);
            call_vehicle.enqueue(new Callback<List<Vehicle>>() {
                @Override
                public void onResponse(Call<List<Vehicle>> call, Response<List<Vehicle>> response) {
                    List<Vehicle> vehicle_item = response.body();
-                   vehicle.setText("Vehiculi_id: "+vehicle_id.toString());
-                   //mostrar datos vehiculo
+                   vehicle_model.setText("Modelo: "+vehicle_item.get(0).getModel());
+                   vehicle_color.setText("Color: "+vehicle_item.get(0).getColor());
+                   vehicle_plates.setText("Placas: "+vehicle_item.get(0).getPlates());
                }
 
                @Override
                public void onFailure(Call<List<Vehicle>> call, Throwable t) {
-
+                   Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                }
            });
         }
@@ -110,19 +147,87 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<IntermediateStop>> call, Response<List<IntermediateStop>> response) {
                 List<IntermediateStop> stops = response.body();
-                //recicler view de las stops;
+                adapter = new Adapter_stops(stops,R.layout.recycler_view_stop_item);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<List<IntermediateStop>> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        b_solicitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder confirm_solicitud = new AlertDialog.Builder(RideDetailsActivity.this);
+                confirm_solicitud.setMessage("¿Desea solicitar el Ride "+ride_id+"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                realm= Realm.getDefaultInstance();
+                                userx=realm.where(LogedUser.class).findAll();
+                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id ,Integer.toString(userx.get(0).getId_user()));
 
+                                //Vehicle vehicle = new Vehicle(Integer.toString(0), Integer.toString(userx.get(0).getId_user()),
+
+                                sendGuest(guest);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = confirm_solicitud.create();
+                alert.setTitle("Solicitud de Ride");
+                alert.show();
             }
         });
 
-        //Set to Layout
-        id_ride.setText(ride_id);
-        h_firstname.setText(host.getFirst_name());
-        h_lastname.setText(host.getLast_name());
+    }
 
+    public void sendGuest(RideGuest guest) {
+        service.postGuest(guest).enqueue(new Callback<RideGuest>() {
+            @Override
+            public void onResponse(Call<RideGuest> call, final Response<RideGuest> response) {
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        updateRide();
+                    }
+                }
+                else{
+                    Toast.makeText(RideDetailsActivity.this,"Error al enviar solicitud.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RideGuest> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateRide(){
+        final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
+        Ride up_ride = new Ride(ride.get(0).getId_ride(),ride.get(0).getStarting_point(),ride.get(0).getDate(),
+                ride.get(0).getHour(),Integer.toString(new_room),ride.get(0).getN_stops(),ride.get(0).getCost(),
+                ride.get(0).getHost(),ride.get(0).getVehicle(),ride.get(0).getDestination(),ride.get(0).getIs_active());
+
+        Call<Ride> rideCall = service.putRide(ride_id,up_ride);
+        rideCall.enqueue(new Callback<Ride>() {
+            @Override
+            public void onResponse(Call<Ride> call, Response<Ride> response) {
+                Toast.makeText(RideDetailsActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<Ride> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

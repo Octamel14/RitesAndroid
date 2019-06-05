@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.rites.models.IntermediateStop;
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
+import com.example.rites.models.RideGuest;
 import com.example.rites.models.User;
 import com.example.rites.models.Vehicle;
 
@@ -17,6 +18,8 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 import android.content.Intent;
@@ -53,7 +56,7 @@ public interface SubeleService {
 
     @Headers( "Content-Type: application/json" )
     @GET("/intermediatestops/?")
-    Call<List<IntermediateStop>> getStop(@Query("ride_id") String ride_id);
+    Call<List<IntermediateStop>> getStop(@Query("id_ride") String ride_id);
 
     @Headers( "Content-Type: application/json" )
     @GET("/vehicles/?")
@@ -65,6 +68,11 @@ public interface SubeleService {
 
     //@POST("/rides/")
     //Call <ResponseBody>  CreateRide(@Body PostRide ride);
+
+    @Headers( "Content-Type: application/json" )
+    @POST("/rides/")
+    Call<Ride>  CreateRide(@Body Ride ride);
+
     @Headers("Content-Type: application/json" )
     @POST("/users/")
     Call<User> postUser(@Body User user);
@@ -73,6 +81,18 @@ public interface SubeleService {
     @POST("/vehicles/")
     Call<Vehicle> postVehicle(@Body Vehicle vehicle);
 
+    @Headers( "Content-Type: application/json" )
+    @GET("/vehicles/?")
+    Call<List<Vehicle>> getVehicleByUserID(@Query("user") String user);
+
+    @Headers("Content-Type: application/json" )
+    @POST("/rideguests/")
+    Call<RideGuest> postGuest(@Body RideGuest guest);
+
+
+    @Headers( "Content-Type: application/json" )
+    @PUT("/rides/{id_ride}")
+    Call<Ride> putRide(@Path("id_ride") String id_ride, @Body Ride ride);
 
 
 }

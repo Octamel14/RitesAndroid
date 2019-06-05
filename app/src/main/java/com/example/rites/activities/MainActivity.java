@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         hour_view.setVisibility(View.INVISIBLE);
         lugar_view.setVisibility(View.INVISIBLE);
 
+        Buscar();
+
         boton_filtro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,74 +123,12 @@ public class MainActivity extends AppCompatActivity {
         boton_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call=null;
-                switch (opc_filter) {
-                    case "hour":
-                        call=null;
-                        respuesta_filter=hour_view.getText().toString();
-                        call = service.getRidesHour(respuesta_filter);
-                        break;
-                    case "destination":
-                        call=null;
-                        respuesta_filter=lugar_view.getText().toString();
-                        call = service.getRidesDestination(respuesta_filter);
-                        break;
-                    case "starting_point":
-                        call=null;
-                        respuesta_filter=lugar_view.getText().toString();
-                        call = service.getRidesOrigin(respuesta_filter);
-                        break;
-                    case "stop":
-                        call=null;
-                        respuesta_filter=lugar_view.getText().toString();
-                        call = service.getRidesStop(respuesta_filter);
-                        break;
-                    case "non":
-                        call=null;
-                        call = service.getRides();
-                        break;
-                    default:
-                        call=null;
-                        call = service.getRides();
-                        break;
-                }
-                call.enqueue(new Callback<List<RideFilter>>() {
-                    @Override
-                    public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
-                        final List<RideFilter> rides=response.body();
-
-
-
-                        adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(RideFilter name, int position) {
-                                final String ride_id = rides.get(position).getId_ride().toString();
-                                final Host h= rides.get(position).getHost();
-                                Toast.makeText(MainActivity.this, ride_id, Toast.LENGTH_LONG).show();
-                                //ACCION kawai para cuando se le da click en un item de la lista minuto 3
-                                Intent intent = new Intent(MainActivity.this,RideDetailsActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("ride_id",ride_id);
-                                bundle.putInt("opc",0); //opc=0=no mostar detalles del vehiculo | 1=mostrar
-                                bundle.putSerializable("host",h);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
-                        });
-
-                        recyclerView.setAdapter(adapter);
-                    }
-                    @Override
-                    public void onFailure(Call<List<RideFilter>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    //////////////////////////////////////////////////////////////////////////////////////////
-                });
+                Buscar();
             }
 
 
         });
+
 
 
        /* Ride ride=new Ride(0, "DICIS", "2019-05-26", "18:48:02", 4, 1, 30.0f, 1, 1, "Valle");
@@ -205,6 +145,78 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });*/
+
+    }
+
+    private void Buscar(){
+        call=null;
+        switch (opc_filter) {
+            case "hour":
+                answer.setText("HORA");
+                call=null;
+                respuesta_filter=hour_view.getText().toString();
+                call = service.getRidesHour(respuesta_filter);
+                break;
+            case "destination":
+                answer.setText("DESTINO");
+                call=null;
+                respuesta_filter=lugar_view.getText().toString();
+                call = service.getRidesDestination(respuesta_filter);
+                break;
+            case "starting_point":
+                answer.setText("ORIGEN");
+                call=null;
+                respuesta_filter=lugar_view.getText().toString();
+                call = service.getRidesOrigin(respuesta_filter);
+                break;
+            case "stop":
+                answer.setText("PARADA INTERMEDIA");
+                call=null;
+                respuesta_filter=lugar_view.getText().toString();
+                call = service.getRidesStop(respuesta_filter);
+                break;
+            case "non":
+                answer.setText("TODOS");
+                call=null;
+                call = service.getRides();
+                break;
+            default:
+                call=null;
+                call = service.getRides();
+                break;
+        }
+        call.enqueue(new Callback<List<RideFilter>>() {
+            @Override
+            public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
+                final List<RideFilter> rides=response.body();
+
+
+                adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(RideFilter name, int position) {
+                        final String ride_id = rides.get(position).getId_ride().toString();
+                        final Host h= rides.get(position).getHost();
+                        //Toast.makeText(MainActivity.this, ride_id, Toast.LENGTH_LONG).show();
+                        //ACCION kawai para cuando se le da click en un item de la lista minuto 3
+                        Intent intent = new Intent(MainActivity.this,RideDetailsActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("ride_id",ride_id);
+                        bundle.putInt("opc",1); //opc=0=no mostar detalles del vehiculo | 1=mostrar
+                        bundle.putSerializable("host",h);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+
+                recyclerView.setAdapter(adapter);
+            }
+            @Override
+            public void onFailure(Call<List<RideFilter>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            //////////////////////////////////////////////////////////////////////////////////////////
+        });
 
     }
 

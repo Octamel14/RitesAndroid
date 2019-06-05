@@ -7,69 +7,86 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/detalles_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DETALLES DEL RAITE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/id_ride"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/detalles_message" />
 
 
     <TextView
-        android:id="@+id/host_firstname"
-        android:layout_width="58dp"
-        android:layout_height="19dp"
+        android:id="@+id/host_name"
+        android:layout_width="205dp"
+        android:layout_height="23dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/id_ride" />
 
     <TextView
-        android:id="@+id/host_lastname"
+        android:id="@+id/textViewCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/host_firstname" />
-
-    <TextView
-        android:id="@+id/textView_starting_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/host_lastname" />
-
-    <TextView
-        android:id="@+id/textView_destination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_starting_point" />
+        app:layout_constraintTop_toBottomOf="@id/host_name" />
 
     <TextView
         android:id="@+id/textView_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_destination" />
+        app:layout_constraintTop_toBottomOf="@id/textViewCost" />
 
     <TextView
         android:id="@+id/textView_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView_date" />
+
+
+    <TextView
+        android:id="@+id/textView_starting_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="88dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/textView_date"
+        app:layout_constraintTop_toTopOf="@+id/textView_date" />
+
+    <TextView
+        android:id="@+id/textView_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="96dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/textView_hour"
+        app:layout_constraintTop_toTopOf="@+id/textView_hour" />
+
 
     <TextView
         android:id="@+id/room"
@@ -77,43 +94,81 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView_hour" />
 
+
     <TextView
-        android:id="@+id/textViewCost"
+        android:id="@+id/vehiculo_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginLeft="120dp"
+        android:text="DETALLES DEL VEHÍCULO"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/room" />
 
+
     <TextView
-        android:id="@+id/vehicle"
+        android:id="@+id/vehicle_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCost" />
+        app:layout_constraintTop_toBottomOf="@id/vehiculo_message" />
+
+    <TextView
+        android:id="@+id/vehicle_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/vehicle_model"
+        app:layout_constraintTop_toTopOf="@id/vehicle_model" />
+
+    <TextView
+        android:id="@+id/vehicle_plates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="48dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/vehicle_color"
+        app:layout_constraintTop_toTopOf="@id/vehicle_color" />
 
     <TextView
         android:id="@+id/n_stops"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/room" />
+        app:layout_constraintTop_toBottomOf="@id/vehicle_model" />
 
-    <TextView
-        android:id="@+id/rv_stops"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewStop"
+        android:layout_width="410dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/n_stops"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button_solicitar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginLeft="48dp"
+        android:text="Solicitar Raite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/n_stops" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewStop" />
 </android.support.constraint.ConstraintLayout>
