@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         hour_view.setVisibility(View.INVISIBLE);
         lugar_view.setVisibility(View.INVISIBLE);
 
-        //Get Logiin Intent params
-        Bundle ride_basics = getIntent().getExtras();
-        opc_filter = (String) ride_basics.getString("opc_filter");
         Buscar();
 
         boton_filtro.setOnClickListener(new View.OnClickListener() {
@@ -155,26 +152,31 @@ public class MainActivity extends AppCompatActivity {
         call=null;
         switch (opc_filter) {
             case "hour":
+                answer.setText("HORA");
                 call=null;
                 respuesta_filter=hour_view.getText().toString();
                 call = service.getRidesHour(respuesta_filter);
                 break;
             case "destination":
+                answer.setText("DESTINO");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesDestination(respuesta_filter);
                 break;
             case "starting_point":
+                answer.setText("ORIGEN");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesOrigin(respuesta_filter);
                 break;
             case "stop":
+                answer.setText("PARADA INTERMEDIA");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesStop(respuesta_filter);
                 break;
             case "non":
+                answer.setText("TODOS");
                 call=null;
                 call = service.getRides();
                 break;
@@ -198,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
                         //ACCION kawai para cuando se le da click en un item de la lista minuto 3
                         Intent intent = new Intent(MainActivity.this,RideDetailsActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putString("opc_filter",opc_filter);
                         bundle.putString("ride_id",ride_id);
                         bundle.putInt("opc",1); //opc=0=no mostar detalles del vehiculo | 1=mostrar
                         bundle.putSerializable("host",h);

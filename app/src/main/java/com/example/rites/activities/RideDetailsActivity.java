@@ -1,7 +1,9 @@
 package com.example.rites.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +19,15 @@ import com.example.rites.R;
 import com.example.rites.adapters.Adapter_stops;
 import com.example.rites.models.Host;
 import com.example.rites.models.IntermediateStop;
+import com.example.rites.models.LogedUser;
 import com.example.rites.models.Ride;
+import com.example.rites.models.RideGuest;
 import com.example.rites.models.Vehicle;
 
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,10 +35,12 @@ import retrofit2.Response;
 public class RideDetailsActivity extends AppCompatActivity {
 
     private int opc;
-    private String opc_filter;
     private String ride_id;
     private Host host;
     private String vehicle_id;
+
+    private Realm realm;
+    private RealmResults<LogedUser> userx;
 
     private TextView h_name;
     private TextView id_ride;
@@ -46,13 +54,15 @@ public class RideDetailsActivity extends AppCompatActivity {
     private TextView vehicle_color;
     private TextView vehicle_plates;
     private TextView n_stops;
-    private Button b_regresar;
     private Button b_solicitar;
 
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager myLayoutManager;
+
+    SubeleService service  = API.getApi().create(SubeleService.class);
+    private List<Ride> ride = null;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -71,7 +81,6 @@ public class RideDetailsActivity extends AppCompatActivity {
         vehicle_color = (TextView) findViewById(R.id.vehicle_color);
         vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
-        b_regresar = (Button) findViewById(R.id.button_regresar);
         b_solicitar = (Button) findViewById(R.id.button_solicitar);
         //recylcer view
         recyclerView=findViewById(R.id.recyclerViewStop);
@@ -83,23 +92,19 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
-        opc_filter = (String) ride_basics.getString("opc_filter"); //Cuando button=Regresar, regresar a la busqueda en la que se encontraba
         opc = (int) ride_basics.getInt("opc");
         ride_id = (String) ride_basics.getString("ride_id");
         host = (Host) ride_basics.getSerializable("host");
-        Toast.makeText(RideDetailsActivity.this, opc_filter, Toast.LENGTH_LONG).show();
         //Set to Layout
         id_ride.setText("ID:"+ride_id);
         h_name.setText("Conductor: "+host.getFirst_name().toUpperCase() +" "+ host.getLast_name().toUpperCase());
 
         //Ride Model
-        SubeleService service  = API.getApi().create(SubeleService.class);
         Call<List<Ride>> call_ride = service.getRideDetails(ride_id);
         call_ride.enqueue(new Callback<List<Ride>>() {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
-                final List<Ride> ride = response.body();
-                final int s = ride.size();
+                 ride = response.body();
 
                 starting_point.setText("Origen: "+ride.get(0).getStarting_point());
                 destination.setText("Destino: "+ride.get(0).getDestination());
@@ -151,24 +156,78 @@ public class RideDetailsActivity extends AppCompatActivity {
                 Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
-        b_regresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RideDetailsActivity.this,MainActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("opc_filter",opc_filter);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
         b_solicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //hacer post
+                AlertDialog.Builder confirm_solicitud = new AlertDialog.Builder(RideDetailsActivity.this);
+                confirm_solicitud.setMessage("¿Desea solicitar el Ride "+ride_id+"?")
+                        .setCancelable(false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                realm= Realm.getDefaultInstance();
+                                userx=realm.where(LogedUser.class).findAll();
+                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id ,Integer.toString(userx.get(0).getId_user()));
+
+                                //Vehicle vehicle = new Vehicle(Integer.toString(0), Integer.toString(userx.get(0).getId_user()),
+
+                                sendGuest(guest);
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = confirm_solicitud.create();
+                alert.setTitle("Solicitud de Ride");
+                alert.show();
             }
         });
 
+    }
+
+    public void sendGuest(RideGuest guest) {
+        service.postGuest(guest).enqueue(new Callback<RideGuest>() {
+            @Override
+            public void onResponse(Call<RideGuest> call, final Response<RideGuest> response) {
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        updateRide();
+                    }
+                }
+                else{
+                    Toast.makeText(RideDetailsActivity.this,"Error al enviar solicitud.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RideGuest> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateRide(){
+        final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
+        Ride up_ride = new Ride(ride.get(0).getId_ride(),ride.get(0).getStarting_point(),ride.get(0).getDate(),
+                ride.get(0).getHour(),Integer.toString(new_room),ride.get(0).getN_stops(),ride.get(0).getCost(),
+                ride.get(0).getHost(),ride.get(0).getVehicle(),ride.get(0).getDestination(),ride.get(0).getIs_active());
+
+        Call<Ride> rideCall = service.putRide(ride_id,up_ride);
+        rideCall.enqueue(new Callback<Ride>() {
+            @Override
+            public void onResponse(Call<Ride> call, Response<Ride> response) {
+                Toast.makeText(RideDetailsActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<Ride> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
