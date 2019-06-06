@@ -15,6 +15,8 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -53,6 +55,8 @@ public interface SubeleService {
     @Headers( "Content-Type: application/json" )
     @GET("/rides/?")
     Call<List<Ride>> getRideDetails(@Query("id_ride") String id_ride);
+
+
 
     @Headers( "Content-Type: application/json" )
     @GET("/intermediatestops/?")
@@ -94,5 +98,9 @@ public interface SubeleService {
     @PUT("/rides/{id_ride}")
     Call<Ride> putRide(@Path("id_ride") String id_ride, @Body Ride ride);
 
+
+    @Headers( "Content-Type: application/json" )
+    @POST("/intermediatestops/")
+    Call<IntermediateStop> PostIntermediateStop(@Body IntermediateStop intermediateStop);
 
 }
