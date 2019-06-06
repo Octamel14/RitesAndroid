@@ -162,7 +162,6 @@ public class Rider_Activity extends AppCompatActivity {
 
             }
 
-
         });
         final AlertDialog dialog=builder.create();
         dialog.show();
@@ -202,12 +201,24 @@ public class Rider_Activity extends AppCompatActivity {
                             Integer position=spinnerCar.getSelectedItemPosition();
                             vehicle_id=Integer.parseInt(vehicles.get(position).getId_vehicle());
                             SubeleService service= API.getApi().create(SubeleService.class);
-                            Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "False");
+                            Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "True");
                             Call call=service.CreateRide(ride);
                             call.enqueue(new Callback() {
                                 @Override
                                 public void onResponse(Call call, Response response) {
-                                    Toast.makeText(Rider_Activity.this, "Ride creado exitósamente", Toast.LENGTH_SHORT).show();
+                                    Ride ride= (Ride) response.body();
+
+                                    String ride_id=ride.getId_ride();
+                                    Host h=new Host(user_id, userx.get(0).getFirst_name(), userx.get(0).getLast_name());
+                                    Buscar();
+
+                                    Intent intent = new Intent(Rider_Activity.this, RideDetailsActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("ride_id",ride_id);
+                                    bundle.putInt("opc",1); //opc=0=no mostar detalles del vehiculo | 1=mostrar
+                                    bundle.putSerializable("host",h);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
                                     dialog.dismiss();
                                 }
 
@@ -237,11 +248,13 @@ public class Rider_Activity extends AppCompatActivity {
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
                     public void onItemClick(RideFilter name, int position) {
+
+                        ///////////////////////////////////////////////////////////CODIGO para ver SOLICITUDES//////////////////////////////////////////////
                         Intent intent = new Intent(Rider_Activity.this, SolicitudesActivity.class);
                         intent.putExtra("id_ride", name.getId_ride());
                         startActivity(intent);
                     }
-                });
+                }, Rider_Activity.this);
 
                 recyclerView.setAdapter(adapter);
             }
