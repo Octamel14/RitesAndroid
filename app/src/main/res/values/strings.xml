@@ -4,4 +4,13 @@
     <string name="title_activity_login_activty">LoginActivty</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="misrides">Ver Mis Rides</string>
+    <string name="filterrides">Ver Rides Disponibles</string>
+    <string-array name="numbers">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

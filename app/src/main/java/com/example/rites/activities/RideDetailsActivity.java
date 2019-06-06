@@ -3,6 +3,7 @@ package com.example.rites.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,13 +11,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rites.API.API;
 import com.example.rites.API.APIservice.SubeleService;
+import com.example.rites.DialogPuntuar;
 import com.example.rites.R;
 import com.example.rites.adapters.Adapter_stops;
 import com.example.rites.models.Host;
@@ -24,8 +30,11 @@ import com.example.rites.models.IntermediateStop;
 import com.example.rites.models.LogedUser;
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideGuest;
+import com.example.rites.models.RideGuestFiler;
+import com.example.rites.models.User;
 import com.example.rites.models.Vehicle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -34,12 +43,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RideDetailsActivity extends AppCompatActivity {
+public class RideDetailsActivity extends AppCompatActivity implements DialogPuntuar.onMultiChoiceListener {
 
     private int opc;
     private String ride_id;
     private Host host;
     private String vehicle_id;
+    private String evaluated;
+    private String score;
+    private String guest_id;
 
     private Realm realm;
     private RealmResults<LogedUser> userx;
@@ -56,7 +68,13 @@ public class RideDetailsActivity extends AppCompatActivity {
     private TextView vehicle_color;
     private TextView vehicle_plates;
     private TextView n_stops;
+    private TextView general_status;
     private Button b_solicitar;
+    private Button b_puntuar;
+    private Integer id_user;
+    private Boolean is_rider;
+    private String is_active;
+
     private Button btn_intermediate_stop;
     private Integer id_user;
     private Boolean is_rider;
@@ -69,6 +87,7 @@ public class RideDetailsActivity extends AppCompatActivity {
 
     SubeleService service  = API.getApi().create(SubeleService.class);
     private List<Ride> ride = null;
+    private List<User> user = null;
     @Override
     protected void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -88,7 +107,9 @@ public class RideDetailsActivity extends AppCompatActivity {
         vehicle_color = (TextView) findViewById(R.id.vehicle_color);
         vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
+        general_status = (TextView) findViewById(R.id.textView_status);
         b_solicitar = (Button) findViewById(R.id.button_solicitar);
+        b_puntuar = (Button) findViewById(R.id.button_puntuar);
         //recylcer view
         recyclerView=findViewById(R.id.recyclerViewStop);
         myLayoutManager=new LinearLayoutManager(RideDetailsActivity.this);
@@ -96,18 +117,24 @@ public class RideDetailsActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(myLayoutManager);
 
-        realm= Realm.getDefaultInstance();
+        realm= Realm.getDefaultInstance();  //////////Inicializar DB interna
         userx=realm.where(LogedUser.class).findAll();
-        id_user=userx.get(0).getId_user();
+        id_user = userx.get(0).getId_user();
+        is_rider = userx.get(0).getIs_rider();
+        general_status.setVisibility(View.INVISIBLE);
         b_solicitar.setVisibility(View.INVISIBLE);
         btn_intermediate_stop.setVisibility(View.INVISIBLE);
 
 
         //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
-        opc = (int) ride_basics.getInt("opc");
+        opc = (int) ride_basics.getInt("opc");//status del no driver
         ride_id = (String) ride_basics.getString("ride_id");
         host = (Host) ride_basics.getSerializable("host");
+        if (opc==1){
+            evaluated = (String) ride_basics.getString("evaluated");
+            guest_id = (String) ride_basics.getString("guest_id");
+        }
         //Set to Layout
         id_ride.setText("ID:"+ride_id);
         h_name.setText("Conductor: "+host.getFirst_name().toUpperCase() +" "+ host.getLast_name().toUpperCase());
@@ -117,7 +144,7 @@ public class RideDetailsActivity extends AppCompatActivity {
         call_ride.enqueue(new Callback<List<Ride>>() {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
-                 ride = response.body();
+                ride = response.body();
 
                 starting_point.setText("Origen: "+ride.get(0).getStarting_point());
                 destination.setText("Destino: "+ride.get(0).getDestination());
@@ -128,6 +155,8 @@ public class RideDetailsActivity extends AppCompatActivity {
                 n_stops.setText("Paradas Intermedias: "+ride.get(0).getN_stops());
                 vehicle_id = ride.get(0).getVehicle();
                 is_active= ride.get(0).getIs_active();
+                status(); //verificar status para No rider
+
                 //Deshabilitando botones de Unise ride///////////////////
                 is_rider=userx.get(0).getIs_rider();
                 if(is_rider==Boolean.TRUE ){
@@ -197,9 +226,8 @@ public class RideDetailsActivity extends AppCompatActivity {
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
-                               // RideGuest guest = new RideGuest(Integer.toString(0), ride_id ,Integer.toString(userx.get(0).getId_user()), 0);
-                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id, Integer.toString(userx.get(0).getId_user()), 0);
+                                Toast.makeText(RideDetailsActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id, Integer.toString(userx.get(0).getId_user()), "0","false");
 
                                 //Vehicle vehicle = new Vehicle(Integer.toString(0), Integer.toString(userx.get(0).getId_user()),
 
@@ -219,6 +247,67 @@ public class RideDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    public void status(){
+        if (is_rider==Boolean.FALSE){
+            general_status.setVisibility(View.VISIBLE);
+            if(is_active=="true"){
+
+                b_puntuar.setVisibility(View.INVISIBLE);
+                switch (opc){
+                    case 0:
+                        general_status.setText("ESTADO DEL RIDE: EN ESPERA");
+                        break;
+                    case 1:
+                        general_status.setText("ESTADO DEL RIDE: CONFIRMADO");
+                        break;
+                    case 2:
+                        general_status.setText("ESTADO DEL RIDE: NEGADO");
+                        break;
+                }
+            }
+            else{
+                switch (opc){
+                    case 0:
+
+                        b_puntuar.setVisibility(View.INVISIBLE);
+                        general_status.setText("ESTADO DEL RIDE: RECHAZADO");//no lo aceptaron o rechazaron pero is_Active=flase
+                        break;
+                    case 1:
+                        general_status.setText("ESTADO DEL RIDE: FINALIZADO");//lo aceptaron pero is_active=false
+                        if (evaluated=="false"){ //si aun no se califica al conductor en ese ride
+                            b_puntuar.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case 2:
+
+                        b_puntuar.setVisibility(View.INVISIBLE);
+                        general_status.setText("ESTADO DEL RIDE: RECHAZADO");
+                        break;
+
+                }
+            }
+        }
+
+        b_puntuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                puntuar();
+            }
+        });
+    }
+
+
+    public void puntuar(){
+       // DialogPuntuar dialogPuntuar = new DialogPuntuar();
+        //dialogPuntuar.show(getSupportFragmentManager(),"dialog Puntuar");
+        DialogFragment multiChoideDialog= new DialogPuntuar();
+        multiChoideDialog.setCancelable(false);
+        multiChoideDialog.show(getSupportFragmentManager(),"Puntuar conductor");
+
     }
 
     public void sendGuest(RideGuest guest) {
@@ -226,9 +315,6 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RideGuest> call, final Response<RideGuest> response) {
                 if(response.isSuccessful()) {
-                    /*if (response.body() != null) {
-                        updateRide();
-                    }*/
                     Toast.makeText(RideDetailsActivity.this,"Solicitud enviada.", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -308,3 +394,76 @@ public class RideDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void updateRideGuests(){
+        final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
+        RideGuest up_ride = new RideGuest(guest_id,ride_id,String.valueOf(id_user),String.valueOf(opc),"true");
+
+        Call<RideGuest> rideCall = service.putRideGuest(guest_id,up_ride);
+        rideCall.enqueue(new Callback<RideGuest>() {
+            @Override
+            public void onResponse(Call<RideGuest> call, Response<RideGuest> response) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<RideGuest> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateHost(String score) {
+        //Get user
+        Call <List<User>> call_user = service.getUserID(host.getId_user());
+
+        call_user.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                user=response.body();
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+        //update ahora si
+        final int new_scored = user.get(0).getScored()+1;
+        final int new_rider_scored = user.get(0).getRider_score()+Integer.valueOf(score);
+        User up_user = new User(user.get(0).getId_user(),user.get(0).getFirst_name(),user.get(0).getLast_name(),
+                user.get(0).getEmail(),user.get(0).getPassword(),user.get(0).getIs_rider(),new_rider_scored,
+                user.get(0).getRiders_number(),new_scored);
+
+        Call<User> user_call = service.putUserID(user.get(0).getId_user(),up_user);
+        user_call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override//funcion del alert dialog para puntuar conductor
+    public void onPositiveButtonClicked(String[] list, ArrayList<String> selectedItemList) {
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("");
+        for (String str:selectedItemList){
+            score=str;
+        }
+        Toast.makeText(RideDetailsActivity.this,score, Toast.LENGTH_SHORT).show();
+        updateRideGuests();
+        updateHost(score);
+
+    }
+
+    @Override
+    public void onNegativeButtonClicked() { //funcion del alert dialog para puntuar conductor
+        Toast.makeText(RideDetailsActivity.this,"Dialog Cancel", Toast.LENGTH_SHORT).show();
+    }
+}

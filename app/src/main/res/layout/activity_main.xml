@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
+    <include
+        layout = "@layout/actionbar_norider"
+        android:id="@+id/acctioin_bar"
+        ></include>
+
     <Button
         android:id="@+id/button_filtro"
         android:layout_width="wrap_content"
@@ -15,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/acctioin_bar" />
 
     <TextView
         android:id="@+id/answerText"

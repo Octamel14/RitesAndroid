@@ -5,15 +5,17 @@ public class RideGuest {
     private String guest_id;
     private String ride;
     private String user;
-    private int status;
+    private String status;
+    private String evaluated;
 
     public RideGuest(){}
 
-    public RideGuest(String guest_id,String ride_id, String user_id, int status){
+    public RideGuest(String guest_id,String ride_id, String user_id, String status, String evalueted){
         this.guest_id=guest_id;
         this.ride=ride_id;
         this.user=user_id;
-        this.status = status;
+        this.status=status;
+        this.evaluated= evaluated;
     }
 
     public String getRide_id() {
@@ -40,7 +42,19 @@ public class RideGuest {
         this.guest_id = guest_id;
     }
 
-    public int getStatus(){return status;}
+    public String getStatus() {
+        return status;
+    }
 
-    public void setStatus(int status){this.status = status;}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getEvaluated() {
+        return evaluated;
+    }
+
+    public void setEvaluated(String evaluated) {
+        this.evaluated = evaluated;
+    }
 }
