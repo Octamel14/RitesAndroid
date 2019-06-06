@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,16 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.rites.adapters.Adapter_rides;
 import com.example.rites.models.Host;
-import com.example.rites.models.LogedUser;
 import com.example.rites.models.RideFilter;
 
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Rider_Activity extends AppCompatActivity {
 
@@ -83,7 +74,7 @@ public class Rider_Activity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recyclerViewRites);
 
         service = API.getApi().create(SubeleService.class);
-        call = service.getRides();
+        //call = service.getRides();
         myLayoutManager=new LinearLayoutManager(Rider_Activity.this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
@@ -100,16 +91,14 @@ public class Rider_Activity extends AppCompatActivity {
             }
         });
 
-        realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
-        userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
-        if(userx.size() == 0) {
+        realm=Realm.getDefaultInstance();
+        userx=realm.where(LogedUser.class).findAll();
+        if(userx.size() == 0)
+        {
             Toast.makeText(this, "No se pudo cargar información de usuario", Toast.LENGTH_SHORT).show();
             finish();
         }
-        else {
-            Buscar();
-        }
-
+        Buscar();
         user_id=userx.get(0).getId_user();
 
 
@@ -261,6 +250,9 @@ public class Rider_Activity extends AppCompatActivity {
                     public void onItemClick(RideFilter name, int position) {
 
                         ///////////////////////////////////////////////////////////CODIGO para ver SOLICITUDES//////////////////////////////////////////////
+                        Intent intent = new Intent(Rider_Activity.this, SolicitudesActivity.class);
+                        intent.putExtra("id_ride", name.getId_ride());
+                        startActivity(intent);
                     }
                 }, Rider_Activity.this);
 
@@ -273,6 +265,5 @@ public class Rider_Activity extends AppCompatActivity {
 
             //////////////////////////////////////////////////////////////////////////////////////////
         });
-
     }
 }

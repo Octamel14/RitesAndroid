@@ -5,13 +5,15 @@ public class RideGuest {
     private String guest_id;
     private String ride;
     private String user;
+    private int status;
 
     public RideGuest(){}
 
-    public RideGuest(String guest_id,String ride_id, String user_id){
+    public RideGuest(String guest_id,String ride_id, String user_id, int status){
         this.guest_id=guest_id;
         this.ride=ride_id;
         this.user=user_id;
+        this.status = status;
     }
 
     public String getRide_id() {
@@ -37,4 +39,8 @@ public class RideGuest {
     public void setGuest_id(String guest_id) {
         this.guest_id = guest_id;
     }
+
+    public int getStatus(){return status;}
+
+    public void setStatus(int status){this.status = status;}
 }
