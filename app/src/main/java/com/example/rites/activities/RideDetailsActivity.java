@@ -89,6 +89,8 @@ public class RideDetailsActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(myLayoutManager);
 
+        realm= Realm.getDefaultInstance();
+        userx=realm.where(LogedUser.class).findAll();
 
         //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
@@ -160,14 +162,12 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder confirm_solicitud = new AlertDialog.Builder(RideDetailsActivity.this);
-                confirm_solicitud.setMessage("¿Desea solicitar el Ride "+ride_id+"?")
+                confirm_solicitud.setMessage("¿Desea solicitar el Ride " + ride_id + "?")
                         .setCancelable(false)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                realm= Realm.getDefaultInstance();
-                                userx=realm.where(LogedUser.class).findAll();
-                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id ,Integer.toString(userx.get(0).getId_user()));
+                                RideGuest guest = new RideGuest(Integer.toString(0), ride_id, Integer.toString(userx.get(0).getId_user()), 0);
 
                                 //Vehicle vehicle = new Vehicle(Integer.toString(0), Integer.toString(userx.get(0).getId_user()),
 
@@ -194,9 +194,10 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RideGuest> call, final Response<RideGuest> response) {
                 if(response.isSuccessful()) {
-                    if (response.body() != null) {
+                    /*if (response.body() != null) {
                         updateRide();
-                    }
+                    }*/
+                    Toast.makeText(RideDetailsActivity.this,"Solicitud enviada.", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(RideDetailsActivity.this,"Error al enviar solicitud.", Toast.LENGTH_SHORT).show();
@@ -209,7 +210,7 @@ public class RideDetailsActivity extends AppCompatActivity {
             }
         });
     }
-
+/*
     private void updateRide(){
         final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
         Ride up_ride = new Ride(ride.get(0).getId_ride(),ride.get(0).getStarting_point(),ride.get(0).getDate(),
@@ -229,5 +230,5 @@ public class RideDetailsActivity extends AppCompatActivity {
                 Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 }
