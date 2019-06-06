@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +57,15 @@ public class RideDetailsActivity extends AppCompatActivity {
     private TextView vehicle_plates;
     private TextView n_stops;
     private Button b_solicitar;
-
+    private Button btn_intermediate_stop;
+    private Integer id_user;
+    private Boolean is_rider;
+    private String is_active;
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager myLayoutManager;
+    private List<IntermediateStop> stops;
 
     SubeleService service  = API.getApi().create(SubeleService.class);
     private List<Ride> ride = null;
@@ -70,6 +76,7 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         //Initialice Layout components
         id_ride = (TextView) findViewById(R.id.id_ride) ;
+        btn_intermediate_stop=findViewById(R.id.button_intermediate);
         h_name = (TextView) findViewById(R.id.host_name);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
         destination = (TextView) findViewById(R.id.textView_destination);
@@ -89,6 +96,12 @@ public class RideDetailsActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(myLayoutManager);
 
+        realm= Realm.getDefaultInstance();
+        userx=realm.where(LogedUser.class).findAll();
+        id_user=userx.get(0).getId_user();
+        b_solicitar.setVisibility(View.INVISIBLE);
+        btn_intermediate_stop.setVisibility(View.INVISIBLE);
+
 
         //Get Main Activity Params
         Bundle ride_basics = getIntent().getExtras();
@@ -105,7 +118,6 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Ride>> call, Response<List<Ride>> response) {
                  ride = response.body();
-
                 starting_point.setText("Origen: "+ride.get(0).getStarting_point());
                 destination.setText("Destino: "+ride.get(0).getDestination());
                 date.setText("Día: "+ride.get(0).getDate());
@@ -113,9 +125,20 @@ public class RideDetailsActivity extends AppCompatActivity {
                 room.setText("Lugares Disponibles: "+ride.get(0).getRoom());
                 cost.setText("Costo: "+ride.get(0).getCost());
                 n_stops.setText("Paradas Intermedias: "+ride.get(0).getN_stops());
-
                 vehicle_id = ride.get(0).getVehicle();
-
+                is_active= ride.get(0).getIs_active();
+                //Deshabilitando botones de Unise ride///////////////////
+                is_rider=userx.get(0).getIs_rider();
+                if(is_rider==Boolean.TRUE ){
+                    if(is_active=="true"){
+                        btn_intermediate_stop.setVisibility(View.VISIBLE);
+                        b_solicitar.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else{
+                    btn_intermediate_stop.setVisibility(View.INVISIBLE);
+                    b_solicitar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -123,6 +146,14 @@ public class RideDetailsActivity extends AppCompatActivity {
                 Toast.makeText(RideDetailsActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        btn_intermediate_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateIntermediateStop();
+            }
+        });
+
 
         if (opc==1) { //Si se veran detalles del vehiculo, para Vista de -mi riteActual o yo que se xd
            Call<List<Vehicle>> call_vehicle = service.getVehicle(vehicle_id);
@@ -146,7 +177,7 @@ public class RideDetailsActivity extends AppCompatActivity {
         call_stops.enqueue(new Callback<List<IntermediateStop>>() {
             @Override
             public void onResponse(Call<List<IntermediateStop>> call, Response<List<IntermediateStop>> response) {
-                List<IntermediateStop> stops = response.body();
+                 stops = response.body();
                 adapter = new Adapter_stops(stops,R.layout.recycler_view_stop_item);
                 recyclerView.setAdapter(adapter);
             }
@@ -165,8 +196,7 @@ public class RideDetailsActivity extends AppCompatActivity {
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                realm= Realm.getDefaultInstance();
-                                userx=realm.where(LogedUser.class).findAll();
+
                                 RideGuest guest = new RideGuest(Integer.toString(0), ride_id ,Integer.toString(userx.get(0).getId_user()));
 
                                 //Vehicle vehicle = new Vehicle(Integer.toString(0), Integer.toString(userx.get(0).getId_user()),
@@ -229,5 +259,48 @@ public class RideDetailsActivity extends AppCompatActivity {
                 Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void CreateIntermediateStop(){
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Crear parada intermedia");
+
+        View viewInflated= LayoutInflater.from(this).inflate(R.layout.dialog_intermediate_stop, null);
+        builder.setView(viewInflated);
+        final EditText input=viewInflated.findViewById(R.id.editTextIntermediateStop);
+
+        builder.setPositiveButton("Crear", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String intermediateStoptext=input.getText().toString().trim();
+                if(intermediateStoptext.length()==0)
+                    Toast.makeText(RideDetailsActivity.this, "Ingresa una parada intermedia", Toast.LENGTH_SHORT).show();
+
+                else{
+                    IntermediateStop intermediateStop= intermediateStop=new IntermediateStop("0", ride_id, intermediateStoptext);
+                    SubeleService service= API.getApi().create(SubeleService.class);
+                    Call call=service.PostIntermediateStop(intermediateStop);
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onResponse(Call call, Response response) {
+                            Toast.makeText(RideDetailsActivity.this, "Parada intermedia creada", Toast.LENGTH_LONG).show();
+                            stops.add((IntermediateStop) response.body());
+                            adapter.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onFailure(Call call, Throwable t) {
+
+                        }
+                    });
+
+                }
+            }
+        });
+        AlertDialog dialog=builder.create();
+        dialog.show();
     }
 }

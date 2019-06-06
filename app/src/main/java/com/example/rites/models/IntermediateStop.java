@@ -1,8 +1,11 @@
 package com.example.rites.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class IntermediateStop {
 
     private String id_stop;
+    @SerializedName("ride")
     private String ride_id;
     private String place;
 
