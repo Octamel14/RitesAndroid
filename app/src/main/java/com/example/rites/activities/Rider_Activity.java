@@ -1,6 +1,8 @@
 package com.example.rites.activities;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,8 +64,6 @@ public class Rider_Activity extends AppCompatActivity {
     private RealmResults<LogedUser> userx;
 
     private FloatingActionButton fab;
-    private Realm realm;
-    private RealmResults<LogedUser> userx;
     private List<Vehicle> vehicles;
     private List<String> vehiclesModel=new LinkedList<String>();
     private List<String> DayOptions=new LinkedList<String>();
@@ -177,7 +177,7 @@ public class Rider_Activity extends AppCompatActivity {
 
 
         });
-        AlertDialog dialog=builder.create();
+        final AlertDialog dialog=builder.create();
         dialog.show();
 
         dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(

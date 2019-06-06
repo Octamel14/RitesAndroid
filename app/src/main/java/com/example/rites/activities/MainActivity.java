@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recyclerViewRites);
+        //tool bar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.acctioin_bar);
+        setSupportActionBar(toolbar);
+
+
 
         service = API.getApi().create(SubeleService.class);
         call = service.getRides();
@@ -148,7 +156,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.action_misrides:
+                Intent intent = new Intent(MainActivity.this,NoRiderActivity.class);
+                startActivity(intent);
+                //Toast.makeText(MainActivity.this,"Mis Rides",Toast.LENGTH_LONG).show();
+                break;
+            case R.id.action_filtrarrides:
+                Toast.makeText(MainActivity.this,"Rides Disponibles",Toast.LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void Buscar(){
+
         call=null;
         switch (opc_filter) {
             case "hour":
@@ -189,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<RideFilter>> call, Response<List<RideFilter>> response) {
                 final List<RideFilter> rides=response.body();
-
 
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
