@@ -114,7 +114,7 @@
         android:id="@+id/vehicle_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vehiculo_message" />
 
@@ -123,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="72dp"
-        android:text="TextView"
+
         app:layout_constraintLeft_toRightOf="@+id/vehicle_model"
         app:layout_constraintTop_toTopOf="@id/vehicle_model" />
 
@@ -132,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="48dp"
-        android:text="TextView"
+
         app:layout_constraintLeft_toRightOf="@+id/vehicle_color"
         app:layout_constraintTop_toTopOf="@id/vehicle_color" />
 
@@ -141,7 +141,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

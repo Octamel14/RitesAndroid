@@ -24,7 +24,8 @@
         <activity android:name=".activities.NoRiderActivity" />
         <activity android:name=".activities.RideDetailsActivity" />
         <activity android:name=".activities.CreateUserActivity" />
-        <activity android:name=".activities.CreateVehicleActivity"></activity>
+        <activity android:name=".activities.CreateVehicleActivity" />
+        <activity android:name=".activities.SolicitudesActivity"></activity>
     </application>
 
 </manifest>

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,16 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import com.example.rites.adapters.Adapter_rides;
 import com.example.rites.models.Host;
-import com.example.rites.models.LogedUser;
 import com.example.rites.models.RideFilter;
 
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Rider_Activity extends AppCompatActivity {
 
@@ -83,7 +74,7 @@ public class Rider_Activity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recyclerViewRites);
 
         service = API.getApi().create(SubeleService.class);
-        call = service.getRides();
+        //call = service.getRides();
         myLayoutManager=new LinearLayoutManager(Rider_Activity.this);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
@@ -100,18 +91,14 @@ public class Rider_Activity extends AppCompatActivity {
             }
         });
 
-        realm=Realm.getDefaultInstance();  //////////Inicializar DB interna
-        userx=realm.where(LogedUser.class).findAll();  //Recuperar el valor de usuario
+        realm=Realm.getDefaultInstance();
+        userx=realm.where(LogedUser.class).findAll();
         if(userx.size() == 0)
         {
             Toast.makeText(this, "No se pudo cargar información de usuario", Toast.LENGTH_SHORT).show();
             finish();
         }
-        else
-        {
-            Buscar();
-        }
-
+        Buscar();
         user_id=userx.get(0).getId_user();
 
 
@@ -175,7 +162,6 @@ public class Rider_Activity extends AppCompatActivity {
 
             }
 
-
         });
         final AlertDialog dialog=builder.create();
         dialog.show();
@@ -215,12 +201,24 @@ public class Rider_Activity extends AppCompatActivity {
                             Integer position=spinnerCar.getSelectedItemPosition();
                             vehicle_id=Integer.parseInt(vehicles.get(position).getId_vehicle());
                             SubeleService service= API.getApi().create(SubeleService.class);
-                            Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "False");
+                            Ride ride=new Ride(Integer.toString(0), startingPoint, formattedDate, Fullhour, Integer.toString(room), Integer.toString(0), Double.toString(cost), Integer.toString(user_id), Integer.toString(vehicle_id), destination, "True");
                             Call call=service.CreateRide(ride);
                             call.enqueue(new Callback() {
                                 @Override
                                 public void onResponse(Call call, Response response) {
-                                    Toast.makeText(Rider_Activity.this, "Ride creado exitósamente", Toast.LENGTH_SHORT).show();
+                                    Ride ride= (Ride) response.body();
+
+                                    String ride_id=ride.getId_ride();
+                                    Host h=new Host(user_id, userx.get(0).getFirst_name(), userx.get(0).getLast_name());
+                                    Buscar();
+
+                                    Intent intent = new Intent(Rider_Activity.this, RideDetailsActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("ride_id",ride_id);
+                                    bundle.putInt("opc",1); //opc=0=no mostar detalles del vehiculo | 1=mostrar
+                                    bundle.putSerializable("host",h);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
                                     dialog.dismiss();
                                 }
 
@@ -250,19 +248,13 @@ public class Rider_Activity extends AppCompatActivity {
                 adapter=new Adapter_rides(rides, R.layout.recycler_view_rites_item, new Adapter_rides.OnItemClickListener() {
                     @Override
                     public void onItemClick(RideFilter name, int position) {
-                        final String ride_id = rides.get(position).getId_ride();
-                        final Host h= rides.get(position).getHost();
-                        Toast.makeText(Rider_Activity.this, ride_id, Toast.LENGTH_LONG).show();
-                        //ACCION kawai para cuando se le da click en un item de la lista minuto 3
-                        Intent intent = new Intent(Rider_Activity.this, RideDetailsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("ride_id",ride_id);
-                        bundle.putInt("opc",0); //opc=0=no mostar detalles del vehiculo | 1=mostrar
-                        bundle.putSerializable("host",h);
-                        intent.putExtras(bundle);
+
+                        ///////////////////////////////////////////////////////////CODIGO para ver SOLICITUDES//////////////////////////////////////////////
+                        Intent intent = new Intent(Rider_Activity.this, SolicitudesActivity.class);
+                        intent.putExtra("id_ride", name.getId_ride());
                         startActivity(intent);
                     }
-                });
+                }, Rider_Activity.this);
 
                 recyclerView.setAdapter(adapter);
             }

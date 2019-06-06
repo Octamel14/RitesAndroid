@@ -8,6 +8,7 @@ import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
 import com.example.rites.models.RideGuest;
 import com.example.rites.models.RideGuestFiler;
+import com.example.rites.models.Solicitud;
 import com.example.rites.models.User;
 import com.example.rites.models.Vehicle;
 
@@ -16,6 +17,8 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -55,6 +58,8 @@ public interface SubeleService {
     @GET("/rides/?")
     Call<List<Ride>> getRideDetails(@Query("id_ride") String id_ride);
 
+
+
     @Headers( "Content-Type: application/json" )
     @GET("/intermediatestops/?")
     Call<List<IntermediateStop>> getStop(@Query("id_ride") String ride_id);
@@ -66,6 +71,10 @@ public interface SubeleService {
     @Headers( "Content-Type: application/json" )
     @GET("/ridesfilter/?")
     Call<List<RideFilter>> getRidesHost(@Query("host") String host_id);
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/rideguests/?")
+    Call<List<Solicitud>> getSolicitudes(@Query("id_ride") String id_ride);
 
     //@POST("/rides/")
     //Call <ResponseBody>  CreateRide(@Body PostRide ride);
@@ -110,5 +119,11 @@ public interface SubeleService {
     @Headers( "Content-Type: application/json" )
     @PUT("/users/{id_user}")
     Call<User> putUserID(@Path("id_user") Integer id_user, @Body User user);
+    @PUT("/rideguests/{guest_id}")
+    Call<RideGuest> putGuest(@Path("guest_id") String guest_id, @Body RideGuest guest);
+
+    @Headers( "Content-Type: application/json" )
+    @POST("/intermediatestops/")
+    Call<IntermediateStop> PostIntermediateStop(@Body IntermediateStop intermediateStop);
 
 }
