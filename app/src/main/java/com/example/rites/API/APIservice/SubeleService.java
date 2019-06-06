@@ -7,6 +7,7 @@ import com.example.rites.models.IntermediateStop;
 import com.example.rites.models.Ride;
 import com.example.rites.models.RideFilter;
 import com.example.rites.models.RideGuest;
+import com.example.rites.models.RideGuestFiler;
 import com.example.rites.models.Solicitud;
 import com.example.rites.models.User;
 import com.example.rites.models.Vehicle;
@@ -104,6 +105,20 @@ public interface SubeleService {
     Call<Ride> putRide(@Path("id_ride") String id_ride, @Body Ride ride);
 
     @Headers( "Content-Type: application/json" )
+    @GET("/rideguests/?")
+    Call<List<RideGuestFiler>> getGuestRides(@Query("user_id") String user);
+
+    @Headers( "Content-Type: application/json" )
+    @PUT("/rideguests/{guest_id}")
+    Call<RideGuest> putRideGuest(@Path("guest_id") String guest_id, @Body RideGuest rideGuest);
+
+    @Headers( "Content-Type: application/json" )
+    @GET("/users/?")
+    Call<List<User>> getUserID(@Query("id_user") Integer id_user);
+
+    @Headers( "Content-Type: application/json" )
+    @PUT("/users/{id_user}")
+    Call<User> putUserID(@Path("id_user") Integer id_user, @Body User user);
     @PUT("/rideguests/{guest_id}")
     Call<RideGuest> putGuest(@Path("guest_id") String guest_id, @Body RideGuest guest);
 
