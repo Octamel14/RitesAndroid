@@ -42,7 +42,7 @@ public interface SubeleService {
     Call<List<RideFilter>> getRidesHour(@Query("hour") String hour);
 
     @Headers( "Content-Type: application/json" )
-    @GET("/ridesfilter")
+    @GET("/ridesfilter/")
     Call<List<RideFilter>> getRidesStop(@Query("stop") String stop);
 
     @Headers( "Content-Type: application/json" )

@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(MainActivity.this,""+item.getTitle(),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this,""+item.getTitle(),Toast.LENGTH_LONG).show();
 
                         switch (item.getItemId()){
                             case R.id.hour:
@@ -176,10 +176,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_misrides:
                 Intent intent = new Intent(MainActivity.this,NoRiderActivity.class);
                 startActivity(intent);
+                finish();
                 //Toast.makeText(MainActivity.this,"Mis Rides",Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_filtrarrides:
-                Toast.makeText(MainActivity.this,"Rides Disponibles",Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this,"Rides Disponibles",Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

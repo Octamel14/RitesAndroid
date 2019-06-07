@@ -1,5 +1,6 @@
 package com.example.rites.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
@@ -79,6 +81,7 @@ public class RideDetailsActivity extends AppCompatActivity {
     private String is_active;
 
     private Button btn_intermediate_stop;
+    private Button btn_finish;
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
@@ -101,6 +104,7 @@ public class RideDetailsActivity extends AppCompatActivity {
         //Initialice Layout components
         //id_ride = (TextView) findViewById(R.id.id_ride) ;
         btn_intermediate_stop=findViewById(R.id.button_intermediate);
+        btn_finish=findViewById(R.id.button_finish);
         h_name = (TextView) findViewById(R.id.host_name);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
         destination = (TextView) findViewById(R.id.textView_destination);
@@ -129,6 +133,7 @@ public class RideDetailsActivity extends AppCompatActivity {
         general_status.setVisibility(View.INVISIBLE);
         b_solicitar.setVisibility(View.INVISIBLE);
         btn_intermediate_stop.setVisibility(View.INVISIBLE);
+        btn_finish.setVisibility(View.INVISIBLE);
 
 
         //Get Main Activity Params
@@ -169,10 +174,12 @@ public class RideDetailsActivity extends AppCompatActivity {
                     b_solicitar.setVisibility(View.INVISIBLE);
                     if(is_active=="true"){
                         btn_intermediate_stop.setVisibility(View.VISIBLE);
+                        btn_finish.setVisibility(View.VISIBLE);
                     }
                 }
                 else{
                     btn_intermediate_stop.setVisibility(View.INVISIBLE);
+                    btn_finish.setVisibility(View.INVISIBLE);
                     b_solicitar.setVisibility(View.VISIBLE);
                 }
             }
@@ -187,6 +194,13 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CreateIntermediateStop();
+            }
+        });
+
+        btn_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FinishRide();
             }
         });
 
@@ -227,7 +241,7 @@ public class RideDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder confirm_solicitud = new AlertDialog.Builder(RideDetailsActivity.this);
-                confirm_solicitud.setMessage("¿Desea solicitar el Ride " + ride_id + "?")
+                confirm_solicitud.setMessage("¿Desea solicitar el Ride?")
                         .setCancelable(false)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
@@ -457,6 +471,21 @@ public class RideDetailsActivity extends AppCompatActivity {
     }
 
 
+    private void FinishRide()
+    {
+        ride.get(0).setIs_active("false");
+        Call<Ride> call = service.putRide(ride.get(0).getId_ride(), ride.get(0));
+        call.enqueue(new Callback<Ride>() {
+            @Override
+            public void onResponse(Call<Ride> call, Response<Ride> response) {
+                recreate();
+            }
 
+            @Override
+            public void onFailure(Call<Ride> call, Throwable t) {
+                Log.d("CLICK", "ERROR");
+            }
+        });
+    }
 
 }

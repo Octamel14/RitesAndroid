@@ -65,6 +65,7 @@ public class NoRiderActivity extends AppCompatActivity {
         //tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar2);
         setSupportActionBar(toolbar);
+        setTitle("Mis Rides");
 
 
         service = API.getApi().create(SubeleService.class);
@@ -97,7 +98,7 @@ public class NoRiderActivity extends AppCompatActivity {
                     public void onItemClick(RideFilter name, int position) {
                         final String ride_id = name.getId_ride().toString();
                         final Host h= name.getHost();
-                        Toast.makeText(NoRiderActivity.this, String.valueOf(position), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(NoRiderActivity.this, String.valueOf(position), Toast.LENGTH_LONG).show();
                         //ACCION kawai para cuando se le da click en un item de la lista minuto 3
                         Intent intent = new Intent(NoRiderActivity.this,RideDetailsActivity.class);
                         Bundle bundle = new Bundle();
@@ -114,7 +115,7 @@ public class NoRiderActivity extends AppCompatActivity {
                     }
                 }, NoRiderActivity.this);
                 recyclerView.setAdapter(adapter);
-                Toast.makeText(NoRiderActivity.this, rideFilters.get(0).getDestination(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(NoRiderActivity.this, rideFilters.get(0).getDestination(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -136,12 +137,13 @@ public class NoRiderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.action_misrides:
-                Toast.makeText(NoRiderActivity.this,"Mis Rides",Toast.LENGTH_LONG).show();
+                //Toast.makeText(NoRiderActivity.this,"Mis Rides",Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_filtrarrides:
                 Intent intent = new Intent(NoRiderActivity.this,MainActivity.class);
                 startActivity(intent);
-                Toast.makeText(NoRiderActivity.this,"Rides Disponibles",Toast.LENGTH_LONG).show();
+                finish();
+                //Toast.makeText(NoRiderActivity.this,"Rides Disponibles",Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.example.rites.API.API;
@@ -45,6 +46,11 @@ public class SolicitudesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitudes);
         recyclerView=findViewById(R.id.recyclerViewSolicitudes);
+
+        //tool bar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        setTitle("Solicitudes");
 
         id_ride = getIntent().getStringExtra("id_ride");
 
