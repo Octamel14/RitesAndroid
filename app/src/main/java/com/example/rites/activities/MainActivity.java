@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button boton_filtro;
     private EditText hour_view;
     private EditText lugar_view;
-    private Button boton_buscar;
+    private ImageButton boton_buscar;
     private TextView answer;
     private String respuesta_filter;
     private String opc_filter = "non";
@@ -55,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView=findViewById(R.id.recyclerViewRites);
         //tool bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.acctioin_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-
+        setTitle("Rites Disponibles");
 
 
         service = API.getApi().create(SubeleService.class);
@@ -70,11 +71,12 @@ public class MainActivity extends AppCompatActivity {
         boton_filtro = (Button) findViewById(R.id.button_filtro);
         hour_view = (EditText) findViewById(R.id.timeView);
         lugar_view = (EditText) findViewById(R.id.placeView);
-        boton_buscar = (Button) findViewById(R.id.boton_buscar);
-        answer = (TextView) findViewById(R.id.answerText);
+        boton_buscar = (ImageButton) findViewById(R.id.boton_buscar);
+        //answer = (TextView) findViewById(R.id.answerText);
         hour_view.setVisibility(View.INVISIBLE);
         lugar_view.setVisibility(View.INVISIBLE);
 
+        boton_filtro.setText("TODOS");
         Buscar();
 
         boton_filtro.setOnClickListener(new View.OnClickListener() {
@@ -95,28 +97,33 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.hour:
                                 hour_view.setVisibility(View.VISIBLE);
                                 opc_filter="hour";
-                                answer.setText("HORA");
+                                //answer.setText("HORA");
+                                boton_filtro.setText("HORA:");
                                 return  true;
                             case R.id.destination:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 opc_filter="destination";
-                                answer.setText("DESTINO");
+                                //answer.setText("DESTINO");
+                                boton_filtro.setText("DESTINO:");
                                 return  true;
                             case R.id.starting_point:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 opc_filter="starting_point";
-                                answer.setText("ORIGEN");
+                                //answer.setText("ORIGEN");
+                                boton_filtro.setText("ORIGEN:");
                                 return  true;
                             case R.id.intermediate:
                                 lugar_view.setVisibility(View.VISIBLE);
                                 opc_filter="stop";
-                                answer.setText("PARADA INTERMEDIA");
+                                //answer.setText("PARADA INTERMEDIA");
+                                boton_filtro.setText("PARADA:");
                                 return  true;
                             case R.id.todos:
                                 lugar_view.setVisibility(View.INVISIBLE);
                                 hour_view.setVisibility(View.INVISIBLE);
                                 opc_filter="non";
-                                answer.setText("TODOS");
+                                //answer.setText("TODOS");
+                                boton_filtro.setText("TODOS");
                                 return  true;
                             default:
                                 return false;
@@ -185,31 +192,31 @@ public class MainActivity extends AppCompatActivity {
         call=null;
         switch (opc_filter) {
             case "hour":
-                answer.setText("HORA");
+                //answer.setText("HORA");
                 call=null;
                 respuesta_filter=hour_view.getText().toString();
                 call = service.getRidesHour(respuesta_filter);
                 break;
             case "destination":
-                answer.setText("DESTINO");
+                //answer.setText("DESTINO");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesDestination(respuesta_filter);
                 break;
             case "starting_point":
-                answer.setText("ORIGEN");
+                //answer.setText("ORIGEN");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesOrigin(respuesta_filter);
                 break;
             case "stop":
-                answer.setText("PARADA INTERMEDIA");
+                //answer.setText("PARADA INTERMEDIA");
                 call=null;
                 respuesta_filter=lugar_view.getText().toString();
                 call = service.getRidesStop(respuesta_filter);
                 break;
             case "non":
-                answer.setText("TODOS");
+                //answer.setText("TODOS");
                 call=null;
                 call = service.getRides();
                 break;

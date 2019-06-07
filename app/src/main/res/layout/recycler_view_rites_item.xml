@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
-    android:padding="5dp"
-    android:paddingBottom="5dp"
-    android:background="#EEEEEE">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10sp"
+    android:layout_marginBottom="10sp"
+    android:paddingBottom="16sp"
+    android:background="#d9e9f4">
 
     <TextView
         android:id="@+id/textView_starting_point"
