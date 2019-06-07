@@ -98,16 +98,15 @@ public class Rider_Activity extends AppCompatActivity {
             Toast.makeText(this, "No se pudo cargar información de usuario", Toast.LENGTH_SHORT).show();
             finish();
         }
-        Buscar();
         user_id=userx.get(0).getId_user();
 
+        service= API.getApi().create(SubeleService.class);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SubeleService service= API.getApi().create(SubeleService.class);
         Call<List<Vehicle>> call = service.getVehicleByUserID(Integer.toString(userx.get(0).getId_user()));
         call.enqueue(new Callback<List<Vehicle>>() {
             @Override
@@ -133,7 +132,7 @@ public class Rider_Activity extends AppCompatActivity {
             }
         });
 
-
+        Buscar();
     }
 
     private void showAlertForCreatingRide(String title){
@@ -257,6 +256,7 @@ public class Rider_Activity extends AppCompatActivity {
                 }, Rider_Activity.this);
 
                 recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<List<RideFilter>> call, Throwable t) {

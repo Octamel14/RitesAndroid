@@ -76,7 +76,6 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
     private String is_active;
 
     private Button btn_intermediate_stop;
-
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
@@ -367,8 +366,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         });
         AlertDialog dialog=builder.create();
         dialog.show();
-        }
-
+    }
 
     private void updateRideGuests(){
         final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
