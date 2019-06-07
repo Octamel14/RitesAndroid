@@ -107,6 +107,7 @@ public class Rider_Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        vehiclesModel.clear();
         Call<List<Vehicle>> call = service.getVehicleByUserID(Integer.toString(userx.get(0).getId_user()));
         call.enqueue(new Callback<List<Vehicle>>() {
             @Override

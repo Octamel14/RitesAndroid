@@ -15,6 +15,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,10 +44,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RideDetailsActivity extends AppCompatActivity implements DialogPuntuar.onMultiChoiceListener {
+public class RideDetailsActivity extends AppCompatActivity {
 
     private int opc;
     private String ride_id;
+    private User up_user;
     private Host host;
     private String vehicle_id;
     private String evaluated;
@@ -157,9 +159,10 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
                 //Deshabilitando botones de Unise ride///////////////////
                 is_rider=userx.get(0).getIs_rider();
                 if(is_rider==Boolean.TRUE ){
+                    b_puntuar.setVisibility(View.INVISIBLE);
+                    b_solicitar.setVisibility(View.INVISIBLE);
                     if(is_active=="true"){
                         btn_intermediate_stop.setVisibility(View.VISIBLE);
-                        b_solicitar.setVisibility(View.INVISIBLE);
                     }
                 }
                 else{
@@ -300,9 +303,28 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
 
     public void puntuar(){
 
-        DialogFragment multiChoideDialog= new DialogPuntuar();
-        multiChoideDialog.setCancelable(false);
-        multiChoideDialog.show(getSupportFragmentManager(),"Puntuar conductor");
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Califica a tu rider");
+
+        View viewInflated= LayoutInflater.from(this).inflate(R.layout.puntuar_rider, null);
+        builder.setView(viewInflated);
+        final RatingBar ratingBar=viewInflated.findViewById(R.id.ratingBar);
+        builder.setPositiveButton("Calificar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Integer score= (int) ratingBar.getRating();
+                updateRideGuests();
+                updateHost(score.toString());
+            }
+
+
+        });
+        AlertDialog dialog=builder.create();
+        dialog.show();
+
+
 
     }
 
@@ -386,14 +408,35 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         });
     }
 
-    private void updateHost(String score) {
+    private void updateHost(final String score) {
         //Get user
+
         Call <List<User>> call_user = service.getUserID(host.getId_user());
+
 
         call_user.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 user=response.body();
+                //update ahora si
+                final int new_scored = user.get(0).getScored()+1;
+                final int new_rider_scored = user.get(0).getRider_score()+Integer.valueOf(score);
+                up_user = new User(user.get(0).getId_user(),user.get(0).getFirst_name(),user.get(0).getLast_name(),
+                        user.get(0).getEmail(),user.get(0).getPassword(),user.get(0).getIs_rider(),new_rider_scored,
+                        user.get(0).getRiders_number(),new_scored);
+
+                Call<User> user_call = service.putUserID(user.get(0).getId_user(),up_user);
+                user_call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -402,42 +445,11 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
 
             }
         });
-        //update ahora si
-        final int new_scored = user.get(0).getScored()+1;
-        final int new_rider_scored = user.get(0).getRider_score()+Integer.valueOf(score);
-        User up_user = new User(user.get(0).getId_user(),user.get(0).getFirst_name(),user.get(0).getLast_name(),
-                user.get(0).getEmail(),user.get(0).getPassword(),user.get(0).getIs_rider(),new_rider_scored,
-                user.get(0).getRiders_number(),new_scored);
 
-        Call<User> user_call = service.putUserID(user.get(0).getId_user(),up_user);
-        user_call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                finish();
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override//funcion del alert dialog para puntuar conductor
-    public void onPositiveButtonClicked(String[] list, ArrayList<String> selectedItemList) {
-        StringBuilder stringBuilder=new StringBuilder();
-        stringBuilder.append("");
-        for (String str:selectedItemList){
-            score=str;
-        }
-        Toast.makeText(RideDetailsActivity.this,score, Toast.LENGTH_SHORT).show();
-        updateRideGuests();
-        updateHost(score);
 
     }
 
-    @Override
-    public void onNegativeButtonClicked() { //funcion del alert dialog para puntuar conductor
-        Toast.makeText(RideDetailsActivity.this,"Dialog Cancel", Toast.LENGTH_SHORT).show();
-    }
+
+
 }
