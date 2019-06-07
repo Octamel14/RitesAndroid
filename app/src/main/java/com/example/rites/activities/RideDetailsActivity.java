@@ -76,9 +76,6 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
     private String is_active;
 
     private Button btn_intermediate_stop;
-    private Integer id_user;
-    private Boolean is_rider;
-    private String is_active;
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
@@ -107,7 +104,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         vehicle_color = (TextView) findViewById(R.id.vehicle_color);
         vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
-        general_status = (TextView) findViewById(R.id.textView_status);
+        general_status = (TextView) findViewById(R.id.textView_statusx);
         b_solicitar = (Button) findViewById(R.id.button_solicitar);
         b_puntuar = (Button) findViewById(R.id.button_puntuar);
         //recylcer view
@@ -391,7 +388,6 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         });
         AlertDialog dialog=builder.create();
         dialog.show();
-        }
     }
 
     private void updateRideGuests(){
