@@ -112,7 +112,7 @@ public class NoRiderActivity extends AppCompatActivity {
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
-                });
+                }, NoRiderActivity.this);
                 recyclerView.setAdapter(adapter);
                 Toast.makeText(NoRiderActivity.this, rideFilters.get(0).getDestination(), Toast.LENGTH_LONG).show();
             }

@@ -113,7 +113,7 @@ public class Adapter_solicitudes extends RecyclerView.Adapter<Adapter_solicitude
                 @Override
                 public void onClick(View v) {
                     RideGuest up_guest = new RideGuest(name.getGuest_id(), name.getRide(),
-                            Integer.toString(name.getUser().getId_user()), 1);
+                            Integer.toString(name.getUser().getId_user()), "1", "false");
 
                     SubeleService service  = API.getApi().create(SubeleService.class);
                     Call<RideGuest> call = service.putGuest(name.getGuest_id(), up_guest);
@@ -136,7 +136,7 @@ public class Adapter_solicitudes extends RecyclerView.Adapter<Adapter_solicitude
                 @Override
                 public void onClick(View v) {
                     RideGuest up_guest = new RideGuest(name.getGuest_id(), name.getRide(),
-                            Integer.toString(name.getUser().getId_user()), 2);
+                            Integer.toString(name.getUser().getId_user()), "2", "false");
 
                     SubeleService service  = API.getApi().create(SubeleService.class);
                     Call<RideGuest> call = service.putGuest(name.getGuest_id(), up_guest);

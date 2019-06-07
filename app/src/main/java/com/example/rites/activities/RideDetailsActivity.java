@@ -76,9 +76,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
     private String is_active;
 
     private Button btn_intermediate_stop;
-    private Integer id_user;
-    private Boolean is_rider;
-    private String is_active;
+
     //Recycler view
     private RecyclerView recyclerView;
     private  RecyclerView.Adapter adapter;
@@ -107,7 +105,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         vehicle_color = (TextView) findViewById(R.id.vehicle_color);
         vehicle_plates = (TextView) findViewById(R.id.vehicle_plates);
         n_stops = (TextView) findViewById(R.id.n_stops);
-        general_status = (TextView) findViewById(R.id.textView_status);
+        general_status = (TextView) findViewById(R.id.textView_statusx);
         b_solicitar = (Button) findViewById(R.id.button_solicitar);
         b_puntuar = (Button) findViewById(R.id.button_puntuar);
         //recylcer view
@@ -302,8 +300,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
 
 
     public void puntuar(){
-       // DialogPuntuar dialogPuntuar = new DialogPuntuar();
-        //dialogPuntuar.show(getSupportFragmentManager(),"dialog Puntuar");
+
         DialogFragment multiChoideDialog= new DialogPuntuar();
         multiChoideDialog.setCancelable(false);
         multiChoideDialog.show(getSupportFragmentManager(),"Puntuar conductor");
@@ -328,27 +325,6 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
             }
         });
     }
-
-    /*private void updateRide(){
-        final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;
-        Ride up_ride = new Ride(ride.get(0).getId_ride(),ride.get(0).getStarting_point(),ride.get(0).getDate(),
-                ride.get(0).getHour(),Integer.toString(new_room),ride.get(0).getN_stops(),ride.get(0).getCost(),
-                ride.get(0).getHost(),ride.get(0).getVehicle(),ride.get(0).getDestination(),ride.get(0).getIs_active());
-
-        Call<Ride> rideCall = service.putRide(ride_id,up_ride);
-        rideCall.enqueue(new Callback<Ride>() {
-            @Override
-            public void onResponse(Call<Ride> call, Response<Ride> response) {
-                Toast.makeText(RideDetailsActivity.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            @Override
-            public void onFailure(Call<Ride> call, Throwable t) {
-                Toast.makeText(RideDetailsActivity.this,"No se pudo conectar al servidor.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
 
     private void CreateIntermediateStop(){
 
@@ -392,7 +368,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         AlertDialog dialog=builder.create();
         dialog.show();
         }
-    }
+
 
     private void updateRideGuests(){
         final int new_room = Integer.valueOf(ride.get(0).getRoom()) -1;

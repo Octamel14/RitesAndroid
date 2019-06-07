@@ -10,7 +10,7 @@ public class RideGuest {
 
     public RideGuest(){}
 
-    public RideGuest(String guest_id,String ride_id, String user_id, String status, String evalueted){
+    public RideGuest(String guest_id,String ride_id, String user_id, String status, String evalated){
         this.guest_id=guest_id;
         this.ride=ride_id;
         this.user=user_id;
