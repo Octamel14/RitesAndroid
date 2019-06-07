@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
@@ -90,8 +91,13 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_ride_details);
 
+        //tool bar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        setTitle("Detalles del Rite");
+
         //Initialice Layout components
-        id_ride = (TextView) findViewById(R.id.id_ride) ;
+        //id_ride = (TextView) findViewById(R.id.id_ride) ;
         btn_intermediate_stop=findViewById(R.id.button_intermediate);
         h_name = (TextView) findViewById(R.id.host_name);
         starting_point = (TextView) findViewById(R.id.textView_starting_point);
@@ -133,7 +139,7 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
             guest_id = (String) ride_basics.getString("guest_id");
         }
         //Set to Layout
-        id_ride.setText("ID:"+ride_id);
+        //id_ride.setText("ID:"+ride_id);
         h_name.setText("Conductor: "+host.getFirst_name().toUpperCase() +" "+ host.getLast_name().toUpperCase());
 
         //Ride Model
@@ -462,4 +468,6 @@ public class RideDetailsActivity extends AppCompatActivity implements DialogPunt
     public void onNegativeButtonClicked() { //funcion del alert dialog para puntuar conductor
         Toast.makeText(RideDetailsActivity.this,"Dialog Cancel", Toast.LENGTH_SHORT).show();
     }
+
+
 }

@@ -4,42 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#dfebf2">
 
-    <TextView
+    <include
+        layout = "@layout/actionbar_norider"
+        android:id="@+id/action_bar"
+        ></include>
+
+    <!--<TextView
         android:id="@+id/detalles_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="DETALLES DEL RAITE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/id_ride"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detalles_message" />
+        app:layout_constraintTop_toBottomOf="@+id/action_bar" />-->
 
 
     <TextView
         android:id="@+id/host_name"
-        android:layout_width="205dp"
+        android:layout_width="wrap_content"
         android:layout_height="23dp"
+        android:layout_marginTop="10sp"
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.004"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/id_ride" />
+        app:layout_constraintTop_toBottomOf="@id/action_bar" />
 
     <TextView
         android:id="@+id/textViewCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -51,6 +62,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -62,6 +75,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -92,6 +107,8 @@
         android:id="@+id/room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -105,6 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
         android:layout_marginLeft="120dp"
+        android:layout_marginTop="15sp"
         android:text="DETALLES DEL VEHÍCULO"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/room" />
@@ -114,7 +132,8 @@
         android:id="@+id/vehicle_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/vehiculo_message" />
 
@@ -122,8 +141,8 @@
         android:id="@+id/vehicle_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="72dp"
-
+        android:layout_marginLeft="20sp"
+        android:layout_marginStart="20sp"
         app:layout_constraintLeft_toRightOf="@+id/vehicle_model"
         app:layout_constraintTop_toTopOf="@id/vehicle_model" />
 
@@ -131,8 +150,8 @@
         android:id="@+id/vehicle_plates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-
+        android:layout_marginLeft="20sp"
+        android:layout_marginStart="20sp"
         app:layout_constraintLeft_toRightOf="@+id/vehicle_color"
         app:layout_constraintTop_toTopOf="@id/vehicle_color" />
 
@@ -141,7 +160,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-
+        android:layout_marginStart="10sp"
+        android:layout_marginLeft="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
